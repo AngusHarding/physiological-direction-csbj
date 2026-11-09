@@ -4,12 +4,14 @@ Code for Harding et al. (2026), *Distance, Survival and Sex: Addressing a
 Three-Way Trade-Off in Healthspan Trial Recruitment*, Computational and
 Structural Biotechnology Journal.
 
-It goes from the raw NHANES files to every number, table and figure in the
-paper's Results, and ends by checking each number against the paper.
+It goes from the raw NHANES files to every number quoted in the paper's
+Results and to Tables 1, 2 and 4, and ends by checking each number against the
+paper. It also draws Figures 1 and 2 as published, the source tables of
+Figure 4, and checking versions of Figures 3 and 5–7 (see `3_results/README.md`).
 
 ```
 raw NHANES 1999–2018 ──► 1_prepare_nhanes ──────┐
-                                                ├──► 3_results ──► Tables 1, 2, 4, Figures 1–7 and
+                                                ├──► 3_results ──► Tables 1, 2, 4, figures and
 raw NHANES III ────────► 2_prepare_nhanes_iii ──┘                 every number quoted in the Results,
                                                                   then check_against_paper: PASS or FAIL
 ```
@@ -26,7 +28,7 @@ cd 3_results
 python -B make_all.py
 ```
 
-The short run checks every point estimate, table and figure in about 20
+The short run checks every point estimate and Tables 1, 2 and 4 in about 20
 minutes; `python -B make_all.py --full` also recomputes every 95% interval
 (several hours). See `3_results/README.md`.
 
@@ -58,6 +60,14 @@ The prepared tables you make this way are identical to the deposited ones;
 
 Every analysis script was copied from the code that produced the paper. The
 lines changed to make it run from this folder are marked `# public_code`.
+
+Not included: the authors' full working archive, with the development analyses
+that led to the final specification; the Results 4 penalty search (the Results
+use its stored choices); the scripts the authors used to verify the Results 3–7
+intervals against the complete archived bootstrap draws (a full run recomputes
+those intervals instead); and the renderers that drew the published Figures 3–7.
+The paper's supplementary data files hold the numbers behind every figure and
+table.
 
 ## Reading order
 

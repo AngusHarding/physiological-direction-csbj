@@ -39,7 +39,7 @@ s1,female_hr_adjusted_DE,iii,0.689349306577819,0.6400329196460378,0.740968687890
 s1,hr_per_sd_DE,iii,1.4537910830903913,1.3922369984709446,1.5222872610282263,,,,2,01_sex_gap_and_distance/distance_two_era/bootstrap_summary.csv,,,
 s2,female_hr_sex_only,modern,0.6239197063000069,0.5729411039276422,0.6777027486173633,0.62,,,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,
 s2,q_sex_difference_sd_SS,modern,-0.642981012811888,-0.7515737631906104,-0.4883990829172051,−0.64,−0.75,−0.49,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,
-s2,female_hr_adjusted_q_SS,modern,0.9412156007231995,0.8148665457013118,1.0467979388759485,0.94,0.82,1.05,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,"Text prints the lower limit as 0.82; the reviewed value is 0.8149, which rounds to 0.81 (found by the lean pipeline, 30 Oct)"
+s2,female_hr_adjusted_q_SS,modern,0.9412156007231995,0.8148665457013118,1.0467979388759485,0.94,0.81,1.05,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,
 s2,female_log_hr_change_SS,modern,0.4111505477811379,0.2957600970633046,0.4904581765114357,,,,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,
 s2,q_sex_difference_sd_SC,modern,-0.5584567496519168,-0.6598827010460804,-0.4104798525342068,−0.56,,,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,
 s2,female_hr_adjusted_q_SC,modern,0.8858208283604923,0.7757010544756034,0.9759585484193056,0.89,,,2,revision/text/common_scaling_20261022/RESULT_LEDGER.csv,,,
@@ -449,7 +449,7 @@ s4,C_q10_minus_clinical_refit,modern,0.0235985932851574,0.0147538185344039,0.032
 s4,C_q10_minus_phenoage,modern,0.0365089359583549,0.0217910413519733,0.0442236542971439,0.037,0.022,0.044,3,metric_ledger.csv,,,
 s4,C_q38_minus_q10,modern,0.0088822669487906,-0.001664827072663,0.0137541878277367,0.009,−0.002,0.014,3,metric_ledger.csv,,,
 s4,C_phenoage_added_to_q10,modern,-0.0010372203470905,-0.0037192797300081,0.003531061737536,−0.001,−0.004,0.004,3,metric_ledger.csv,,,
-s4,female_hr_q38,modern,0.9247771516419966,,,0.93,,,2,female_coefficient.csv,,,"Text prints 0.93; the reviewed value is 0.9248, which rounds to 0.92 (found by the lean pipeline, 30 Oct)"
+s4,female_hr_q38,modern,0.9247771516419966,,,0.92,,,2,female_coefficient.csv,,,
 s4,female_hr_q10,modern,1.0204231200924767,,,1.02,,,2,female_coefficient.csv,,,
-s4,female_hr_clinical_refit,modern,0.6549825848486924,,,0.66,,,2,female_coefficient.csv,,,"Text prints 0.66; the reviewed value is 0.6550 (0.654983), which rounds to 0.65 (found by the lean pipeline, 30 Oct)"
+s4,female_hr_clinical_refit,modern,0.6549825848486924,,,0.65,,,2,female_coefficient.csv,,,
 s4,female_hr_phenoage,modern,0.6815239161151624,,,0.68,,,2,female_coefficient.csv,,,

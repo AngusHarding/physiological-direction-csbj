@@ -237,8 +237,8 @@ Freeze the data sources and comparison targets before rebuilding participant coh
 | Object | Role |
 |---|---|
 | Raw DEMO and HSQ XPT files | Immutable reconstruction inputs |
-| `release_candidate_v1/analysis/00_data_foundation/output/demographics_dataframe.csv` | Certified eligible-cohort comparison target |
-| `release_candidate_v1/analysis/00_data_foundation/code/cleaning/build_eligible_sample.py` | Historical certified implementation evidence |
+| `release_candidate_v1/analysis/00_data_foundation/output/demographics_dataframe.csv` (authors' archive, not included) | Certified eligible-cohort comparison target |
+| `release_candidate_v1/analysis/00_data_foundation/code/cleaning/build_eligible_sample.py` (authors' archive, not included) | Historical certified implementation evidence |
 
 ### Provenance result
 

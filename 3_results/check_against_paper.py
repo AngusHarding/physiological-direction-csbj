@@ -138,10 +138,13 @@ def check_receipts(section: str, receipts: pd.DataFrame, sources: dict, expected
         return [], set(), None
     stale = out_of_date(sources.get(section))
     if stale:
-        more = f" and {len(stale) - 1} more" if len(stale) > 1 else ""
+        if all(reason.endswith("is missing") for reason in stale):
+            why = "the authors' verification scripts and complete archived draws are not part of this release"
+        else:
+            why = stale[0] + (f" and {len(stale) - 1} more" if len(stale) > 1 else "")
         return [], set(), (f"{len(mine)} intervals or summaries were verified by the authors on the archived "
                            f"results (expected/interval_verification.csv), which cannot be confirmed here "
-                           f"({stale[0]}{more}); they count as pending a full run")
+                           f"({why}); they count as pending a full run")
     targets = expected.set_index(["key", "era"])
     full = record.get("full_draws") or {}
     failures = []

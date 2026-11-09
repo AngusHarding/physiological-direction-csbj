@@ -150,11 +150,8 @@ one endpoint cannot be resumed under another.
 
 ## Tests
 
-```
-python -B -m unittest discover -s analysis/00_mortality_endpoint/tests
-```
-
-`test_endpoints.py` pins the truth table of each endpoint, the cycles in which
+The endpoint's own unit tests are in the authors' working archive and are not
+part of this release. There, `test_endpoints.py` pins the truth table of each endpoint, the cycles in which
 each cause is identifiable, and the event counts in the locked mortality import.
 `test_no_local_endpoint_derivation.py` scans the analysis code and fails if a
 module defines an event for itself, or selects deaths by cause code in

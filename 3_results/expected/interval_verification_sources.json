@@ -1,6 +1,6 @@
 {
  "s3": {
-  "verified": "2026-11-06 17:40:34",
+  "verified": "2026-11-09 10:43:55",
   "rows": 16,
   "verified_by": "s3_healthy_range.intervals on the archived R077 draws",
   "verifier": {
@@ -8,7 +8,7 @@
    "revision/notes/public_code_20261105/verify_common.py": "6f400187013d3e37de641854202fbf557e39cda45cd375d3997ef65c30dde3e8"
   },
   "code": {
-   "final_manuscript/public_code/3_results/check_against_paper.py": "cee242117b0a158709a482152cfdf6f77d1495b55c763b7aefeaea5542ab1800",
+   "final_manuscript/public_code/3_results/check_against_paper.py": "df1500accca9af32a24244024e1930cf5c24a98c68b87c1c8a7d320c3eeb7121",
    "final_manuscript/public_code/3_results/data.py": "0cabe1f4c2bd4a81d76e450a47808dc38da9710ffc7a9d7904842b80a453fd1b",
    "final_manuscript/public_code/3_results/displays.py": "0bfe26cd28c1f09b2d2405de3d07c62357ba808ff45fdd2da449c8f832e9ba71",
    "final_manuscript/public_code/3_results/measures.py": "762a2838659730c770b3d5fb0e7a193089ee7dda77889d17b187178b03bb6a3b",
@@ -22,7 +22,7 @@
   }
  },
  "s4": {
-  "verified": "2026-11-06 17:40:36",
+  "verified": "2026-11-09 10:44:00",
   "rows": 39,
   "verified_by": "s4_panel.benchmark_intervals on the 500 archived R064 draws",
   "verifier": {
@@ -30,7 +30,7 @@
    "revision/notes/public_code_20261105/verify_common.py": "6f400187013d3e37de641854202fbf557e39cda45cd375d3997ef65c30dde3e8"
   },
   "code": {
-   "final_manuscript/public_code/3_results/check_against_paper.py": "cee242117b0a158709a482152cfdf6f77d1495b55c763b7aefeaea5542ab1800",
+   "final_manuscript/public_code/3_results/check_against_paper.py": "df1500accca9af32a24244024e1930cf5c24a98c68b87c1c8a7d320c3eeb7121",
    "final_manuscript/public_code/3_results/data.py": "0cabe1f4c2bd4a81d76e450a47808dc38da9710ffc7a9d7904842b80a453fd1b",
    "final_manuscript/public_code/3_results/models.py": "21a319520cb9230ce84170d6d6c2deba711737e917b3345b8f1105ab96a67eca",
    "final_manuscript/public_code/3_results/prediction.py": "1b5716a658e32e16c362ad45158884e3d1e29e84d44455498b26f8617aa1e6a8",
@@ -302,7 +302,7 @@
   }
  },
  "s5": {
-  "verified": "2026-11-06 17:40:38",
+  "verified": "2026-11-09 10:44:02",
   "rows": 16,
   "verified_by": "s5_transport.attach_intervals on the archived E8b/E8c draws",
   "verifier": {
@@ -310,7 +310,7 @@
    "revision/notes/public_code_20261105/verify_common.py": "6f400187013d3e37de641854202fbf557e39cda45cd375d3997ef65c30dde3e8"
   },
   "code": {
-   "final_manuscript/public_code/3_results/check_against_paper.py": "cee242117b0a158709a482152cfdf6f77d1495b55c763b7aefeaea5542ab1800",
+   "final_manuscript/public_code/3_results/check_against_paper.py": "df1500accca9af32a24244024e1930cf5c24a98c68b87c1c8a7d320c3eeb7121",
    "final_manuscript/public_code/3_results/data.py": "0cabe1f4c2bd4a81d76e450a47808dc38da9710ffc7a9d7904842b80a453fd1b",
    "final_manuscript/public_code/3_results/models.py": "21a319520cb9230ce84170d6d6c2deba711737e917b3345b8f1105ab96a67eca",
    "final_manuscript/public_code/3_results/runs.py": "687e43d9893842faa4133b3367aca8f8e35734436286b815605e503eb79f62de",
@@ -322,7 +322,7 @@
   }
  },
  "s6": {
-  "verified": "2026-11-06 17:40:42",
+  "verified": "2026-11-09 10:44:25",
   "rows": 55,
   "verified_by": "s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)",
   "verifier": {
@@ -330,7 +330,7 @@
    "revision/notes/public_code_20261105/verify_common.py": "6f400187013d3e37de641854202fbf557e39cda45cd375d3997ef65c30dde3e8"
   },
   "code": {
-   "final_manuscript/public_code/3_results/check_against_paper.py": "cee242117b0a158709a482152cfdf6f77d1495b55c763b7aefeaea5542ab1800",
+   "final_manuscript/public_code/3_results/check_against_paper.py": "df1500accca9af32a24244024e1930cf5c24a98c68b87c1c8a7d320c3eeb7121",
    "final_manuscript/public_code/3_results/data.py": "0cabe1f4c2bd4a81d76e450a47808dc38da9710ffc7a9d7904842b80a453fd1b",
    "final_manuscript/public_code/3_results/models.py": "21a319520cb9230ce84170d6d6c2deba711737e917b3345b8f1105ab96a67eca",
    "final_manuscript/public_code/3_results/runs.py": "687e43d9893842faa4133b3367aca8f8e35734436286b815605e503eb79f62de",
@@ -4342,7 +4342,7 @@
   }
  },
  "s7": {
-  "verified": "2026-11-06 17:40:45",
+  "verified": "2026-11-09 10:44:30",
   "rows": 68,
   "verified_by": "models.interval_table on the archived E5c draws",
   "verifier": {
@@ -4350,7 +4350,7 @@
    "revision/notes/public_code_20261105/verify_common.py": "6f400187013d3e37de641854202fbf557e39cda45cd375d3997ef65c30dde3e8"
   },
   "code": {
-   "final_manuscript/public_code/3_results/check_against_paper.py": "cee242117b0a158709a482152cfdf6f77d1495b55c763b7aefeaea5542ab1800",
+   "final_manuscript/public_code/3_results/check_against_paper.py": "df1500accca9af32a24244024e1930cf5c24a98c68b87c1c8a7d320c3eeb7121",
    "final_manuscript/public_code/3_results/models.py": "21a319520cb9230ce84170d6d6c2deba711737e917b3345b8f1105ab96a67eca",
    "final_manuscript/public_code/3_results/runs.py": "687e43d9893842faa4133b3367aca8f8e35734436286b815605e503eb79f62de",
    "final_manuscript/public_code/3_results/settings.py": "e3a66e55cc275bf1c3375929406353cdb1d3e2d76215a2e96a2736d0a1d3764d"

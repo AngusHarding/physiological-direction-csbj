@@ -37,7 +37,7 @@ s4: 45 numbers, 0 table(s): PASS [... 62 draws or evaluations match the archive]
 ```
 
 followed by one allowed formatting difference (Table 1, "17.0" for the
-archive's "17") and the known slips in the manuscript (below). Exit code 0
+archive's "17"). Exit code 0
 means everything passed. Every point estimate is checked; the intervals are
 reported as pending, because they need every draw.
 
@@ -59,12 +59,13 @@ scikit-learn 1.7.2. Each run records the versions it used in its `run.json`.
 **Before the first run**, run `../1_prepare_nhanes/` and then
 `../2_prepare_nhanes_iii/` (see their READMEs).
 
-## Known slips in the manuscript
+## Rounding slips found and corrected
 
-The checker lists these as known errors, not failures; the pipeline agrees with
-the reviewed analysis in each case.
+While checking a draft of the revised manuscript, this checker found three
+numbers printed with the wrong rounding. They were corrected before submission,
+and the expected values here match the published text.
 
-| Where | Printed | Reviewed value | Rounds to |
+| Where | Draft printed | Reviewed value | Published |
 |---|---|---|---|
 | Results 2, paragraph [39], SS adjusted female HR, lower limit | 0.82 | 0.8149 | 0.81 |
 | Results 4, paragraph [68], female HR with the full-panel score | 0.93 | 0.9248 | 0.92 |
@@ -201,7 +202,8 @@ intervals (`--full`).
   reads; they equal the accepted tables. The drawing itself is not yet wired in.
 * Figures 3, 5, 6 and 7 are drawn by the section scripts as checking displays,
   with interval bars once the bootstrap exists. The published versions were
-  drawn from the same results by renderers in the authors' archive.
+  drawn from the same results by renderers in the authors' archive, which is
+  not part of this release.
 
 ## Verified by the authors (6 November 2026)
 

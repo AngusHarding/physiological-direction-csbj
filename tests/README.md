@@ -5,7 +5,7 @@ subject (for example `test_cbc.py` for the blood count). Some test a script's
 rules on small made-up examples; others check the prepared files, for example
 the cohort size or that every participant appears once.
 
-Run them from `public_code/`, after `1_prepare_nhanes/` has made its outputs:
+Run them from the top folder of this repository, after `1_prepare_nhanes/` has made its outputs:
 
 ```
 python -B -m unittest discover -s tests -p "test_*.py"

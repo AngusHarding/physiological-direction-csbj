@@ -115,10 +115,9 @@ Outputs (columns added to the caller's frame)
                                          column analysis code should read
 
 Decision record
-    ../ENDPOINT_SPECIFICATION.md (decision AD-001 of the revision).
+    docs/endpoint.md
 
 Usage
-    sys.path.insert(0, str(GITHUB_FINAL / "analysis/00_mortality_endpoint/code"))
     from endpoints import ENDPOINT, attach_endpoints, expected_events
     from endpoints import cause_identifiable   # cause-specific analyses only
     from endpoints import endpoint_cycles      # cycles the endpoint is defined on
