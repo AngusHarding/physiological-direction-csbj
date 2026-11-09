@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "Distance, Survival and Sex: code"
+authors:
+  - family-names: Harding
+    given-names: Angus
+license: MIT
+repository-code: "https://github.com/AngusHarding/physiological-direction-csbj"
+preferred-citation:
+  type: article
+  title: "Distance, Survival and Sex: Addressing a Three-Way Trade-Off in Healthspan Trial Recruitment"
+  authors:
+    - family-names: Harding
+      given-names: Angus Silas
+    - family-names: Coward
+      given-names: Jim
+    - family-names: Feng
+      given-names: Jinping
+    - family-names: Tian
+      given-names: Tianhai
+  journal: "Computational and Structural Biotechnology Journal"
+  year: 2026

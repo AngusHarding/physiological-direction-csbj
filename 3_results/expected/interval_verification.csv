@@ -1,0 +1,195 @@
+section,key,era,kind,draws,low,high,value,verified_by
+s3,C_DA,modern,interval,200,0.6478845963128945,0.6703612169256099,,s3_healthy_range.intervals on the archived R077 draws
+s3,C_Full,modern,interval,200,0.6780945672225525,0.7026704894011201,,s3_healthy_range.intervals on the archived R077 draws
+s3,C_TZ,modern,interval,200,0.6526345116078317,0.6773985274082523,,s3_healthy_range.intervals on the archived R077 draws
+s3,C_cut_adverse,modern,interval,200,0.6318533699806784,0.6551941958659883,,s3_healthy_range.intervals on the archived R077 draws
+s3,C_cut_either,modern,interval,200,0.6341128952583424,0.6567575124616815,,s3_healthy_range.intervals on the archived R077 draws
+s3,DA_vs_cut_adverse,modern,interval,200,20.21484296811581,47.67564094700759,,s3_healthy_range.intervals on the archived R077 draws
+s3,DA_vs_cut_either,modern,interval,200,15.132925549802682,42.810482300618894,,s3_healthy_range.intervals on the archived R077 draws
+s3,DA_vs_sex_age,modern,interval,200,99.43367319529834,142.50552215749423,,s3_healthy_range.intervals on the archived R077 draws
+s3,corridor_flags_vs_flags,modern,interval,200,-6.564780464226035,10.966670287501486,,s3_healthy_range.intervals on the archived R077 draws
+s3,cut_adverse_vs_sex_age,modern,interval,200,72.7380850168986,103.42277588136989,,s3_healthy_range.intervals on the archived R077 draws
+s3,cut_either_vs_sex_age,modern,interval,200,76.64003461262409,107.27878640041456,,s3_healthy_range.intervals on the archived R077 draws
+s3,drop_beyond_limits,modern,interval,200,-7.809584831049895,15.700492796471613,,s3_healthy_range.intervals on the archived R077 draws
+s3,drop_corridors,modern,interval,200,-5.155717982874677,-0.7057293910895022,,s3_healthy_range.intervals on the archived R077 draws
+s3,drop_young,modern,interval,200,18.78077959552297,51.56805019920683,,s3_healthy_range.intervals on the archived R077 draws
+s3,exact_values_vs_flags,modern,interval,200,15.872871678393404,61.621452647120336,,s3_healthy_range.intervals on the archived R077 draws
+s3,flags_vs_sex_age,modern,interval,200,106.7895691993331,156.9068851129012,,s3_healthy_range.intervals on the archived R077 draws
+s4,C_clinical_refit,modern,interval,500,0.6475209252295302,0.6748168584129861,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_phenoage,modern,interval,500,0.6366567696197988,0.6637831800355967,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_phenoage_added_to_q10,modern,interval,500,-0.0037192797300081,0.0035310617375359,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_q10,modern,interval,500,0.6703922635928747,0.6956130394504382,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_q10_minus_clinical_refit,modern,interval,500,0.0147538185344038,0.0325756337913869,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_q10_minus_phenoage,modern,interval,500,0.0217910413519733,0.0442236542971439,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_q38,modern,interval,500,0.6748383921575759,0.702908658201983,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,C_q38_minus_q10,modern,interval,500,-0.001664827072663,0.0137541878277366,,s4_panel.benchmark_intervals on the 500 archived R064 draws
+s4,iii_distinct_sets_10,modern,summary,472,,,181.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_evaluations,modern,summary,472,,,200.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_heldout_one_retained_gain_median_10,modern,summary,472,,,0.8776240274816431,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_retained_gain_median_10,modern,summary,472,,,0.9339730201472904,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_retained_gain_median_12,modern,summary,472,,,0.949242116545485,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_retained_gain_median_15,modern,summary,472,,,0.9679165908860587,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_retained_gain_median_3,modern,summary,472,,,0.8244713642708759,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_retained_gain_median_5,modern,summary,472,,,0.890331367488961,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_retained_gain_median_7,modern,summary,472,,,0.9021984041746836,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,iii_smallest_adequate_size,modern,summary,472,,,10.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,markers_selected_in_90pct,modern,summary,472,,,8.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_distinct_sets_10,modern,summary,472,,,76.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_evaluations,modern,summary,472,,,252.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_heldout_one_retained_gain_median_10,modern,summary,472,,,0.875913566325043,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_retained_gain_median_10,modern,summary,472,,,0.9128142796509666,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_retained_gain_median_12,modern,summary,472,,,0.9281587102958556,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_retained_gain_median_15,modern,summary,472,,,0.9383548143000476,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_retained_gain_median_3,modern,summary,472,,,0.4477721319419325,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_retained_gain_median_5,modern,summary,472,,,0.6907553068143271,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_retained_gain_median_7,modern,summary,472,,,0.82408310413475,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,modern_smallest_adequate_size,modern,summary,472,,,10.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.ACR,modern,summary,472,,,100.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.BPXPLS,modern,summary,472,,,63.888888888888886,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBDNENO,modern,summary,472,,,96.03174603174604,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXMCVSI,modern,summary,472,,,100.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXPLTSI,modern,summary,472,,,90.87301587301587,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXRDW,modern,summary,472,,,100.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXSAL,modern,summary,472,,,94.04761904761904,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXSATSI,modern,summary,472,,,100.0,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXSGTSI,modern,summary,472,,,93.65079365079364,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s4,selected_at_10_percent.LBXSPH,modern,summary,472,,,55.55555555555556,"s4_panel.selection_numbers on the 5,664 archived evaluations and locks"
+s5,forward_frozen_C,transport,interval,2000,0.6124286736530564,0.6410286389682744,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_frozen_HR,transport,interval,2000,1.1709663085975714,1.4810851458826255,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_joint_recipe_C,transport,interval,2000,0.6163685353510167,0.6442858734427251,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_joint_recipe_HR,transport,interval,2000,1.4571628432911623,1.6552403027179483,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_own_reference_C,transport,interval,2000,0.6148737326252106,0.6416827353521664,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_own_reference_HR,transport,interval,2000,1.3274200655763346,1.609448173455198,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_target_trained_C,transport,interval,2000,0.6319414033567755,0.6526976492367706,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,forward_target_trained_HR,transport,interval,2000,1.4826706296888057,1.7388465712717398,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_frozen_C,transport,interval,2000,0.6405229692772024,0.668735810291917,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_frozen_HR,transport,interval,2000,1.5870390245987935,1.8963364573771389,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_joint_recipe_C,transport,interval,2000,0.6405014999960623,0.6687257007252645,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_joint_recipe_HR,transport,interval,2000,1.5870576008442867,1.8954713281185795,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_own_reference_C,transport,interval,2000,0.6404368923519724,0.6667883569371363,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_own_reference_HR,transport,interval,2000,1.5696060106239351,1.840072614617828,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_target_trained_C,transport,interval,2000,0.6534902738399051,0.6775152557716466,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s5,reverse_target_trained_HR,transport,interval,2000,1.7387203467307253,1.9632882286995348,,s5_transport.attach_intervals on the archived E8b/E8c draws
+s6,DB.E.balanced.risk,iii,interval,1000,9.088151817149512,11.031708723368824,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G1.sex1.risk,iii,interval,1000,3.1868509050478817,6.424673620225188,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G1.sex2.risk,iii,interval,1000,1.939426341365972,4.048582995951411,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2.balanced.risk,iii,interval,1000,4.918983319276732,9.321821873494388,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2.sex1.risk,iii,interval,1000,4.84775465498358,11.429001721170389,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2.sex2.risk,iii,interval,1000,3.4278911564625925,8.725461409395962,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G1.balanced.risk,iii,interval,1000,0.7665008967210851,5.530148889389834,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G1.sex1.risk,iii,interval,1000,-0.3069518576010487,6.772452618441119,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G1.sex2.risk,iii,interval,1000,0.1597942300453747,6.076315410939256,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G3.balanced.risk,iii,interval,1000,-18.089619691768902,-10.793147813493524,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_low_score.balanced.risk,iii,interval,1000,0.5801707033727865,4.140839267037336,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G3.balanced.risk,iii,interval,1000,18.466579146372396,24.497173734341768,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB_minus_R.G2.balanced.risk,iii,interval,1000,-1.3940793404129226,1.685455116417177,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.E.balanced.risk,iii,interval,1000,9.088151817149512,11.031708723368824,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G1.sex1.risk,iii,interval,1000,3.360829855327431,6.183784648187623,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G1.sex2.risk,iii,interval,1000,2.1350051878751803,4.199077669191618,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2.balanced.risk,iii,interval,1000,4.770245095148703,8.967096282885755,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2.sex1.risk,iii,interval,1000,5.084031613026099,11.496530698065609,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2.sex2.risk,iii,interval,1000,2.890173410404639,7.879186602870819,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G1.balanced.risk,iii,interval,1000,0.812553977281417,4.894754609799442,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G1.sex1.risk,iii,interval,1000,0.4541216002025558,6.788181988371919,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G1.sex2.risk,iii,interval,1000,-0.3578334822749318,4.898767315068808,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G3.balanced.risk,iii,interval,1000,-17.94576199972783,-10.847995461071262,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_low_score.balanced.risk,iii,interval,1000,0.6034328455424754,3.611318274587141,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G3.balanced.risk,iii,interval,1000,18.437954558288265,24.064103852245385,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.E.balanced.risk,modern,interval,1000,6.198580802807208,7.201347662173045,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G1.sex1.risk,modern,interval,1000,2.51145840601523,4.211089794408794,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G1.sex2.risk,modern,interval,1000,1.276561823602215,2.6100005709118195,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2.balanced.risk,modern,interval,1000,2.4262989434782503,4.287683694205322,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2.sex1.risk,modern,interval,1000,2.434422756226245,5.257287184903204,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2.sex2.risk,modern,interval,1000,1.702689204763732,4.284673591450562,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G1.balanced.risk,modern,interval,1000,-0.4238874378061579,1.773211387523096,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G1.sex1.risk,modern,interval,1000,-1.28773851790627,2.131837485551093,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G1.sex2.risk,modern,interval,1000,-0.4881771741505686,2.529064375674595,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_G3.balanced.risk,modern,interval,1000,-13.961426892462947,-10.15795844600566,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G2_minus_low_score.balanced.risk,modern,interval,1000,-0.3085570663340996,1.2799829279236252,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB.G3.balanced.risk,modern,interval,1000,13.683455389815796,16.92809397934952,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,DB_minus_R.G2.balanced.risk,modern,interval,1000,-1.345354701855328,0.3346931593773647,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.E.balanced.risk,modern,interval,1000,6.198580802807208,7.201347662173045,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G1.sex1.risk,modern,interval,1000,2.2121995935868037,3.7492264696523065,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G1.sex2.risk,modern,interval,1000,1.406618145221049,2.6973297045180917,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2.balanced.risk,modern,interval,1000,2.7704775863921296,4.872192762771796,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2.sex1.risk,modern,interval,1000,3.3355457227138348,6.6524755919535385,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2.sex2.risk,modern,interval,1000,1.446892307308738,3.981677026425967,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G1.balanced.risk,modern,interval,1000,0.1297191204846214,2.523514069190877,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G1.sex1.risk,modern,interval,1000,0.2044635788278646,3.8402981870064137,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G1.sex2.risk,modern,interval,1000,-0.8521144204089082,2.102171487771551,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_G3.balanced.risk,modern,interval,1000,-13.284628467033102,-9.572596116613962,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G2_minus_low_score.balanced.risk,modern,interval,1000,0.097669386213674,1.8427810683317476,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,R.G3.balanced.risk,modern,interval,1000,13.731093261472305,16.748336908456242,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,cmpcbc24.DB.G2.balanced.risk,modern,interval,1000,2.6388393144421216,4.738045462275881,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,cmpcbc24.R.G2.balanced.risk,modern,interval,1000,3.0630018039963893,5.138771262380192,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,cmpcbc24.R.G2_minus_low_score.balanced.risk,modern,interval,1000,0.2251375348480128,1.9938353319503468,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,cmpcbc24_minus_32.DB.G2.balanced.risk,modern,interval,1000,-0.7283146342882882,1.3683037940639775,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s6,cmpcbc24_minus_32.R.G2.balanced.risk,modern,interval,1000,-0.6750303960644599,1.27921856968013,,"s6_screen.interval_table on the archived draws (E7g stage 5, R115, R119)"
+s7,Bioimpedance reactance|S1|full|candidate_gain,iii,interval,200,1.8925007205087125,8.011293240688092,,models.interval_table on the archived E5c draws
+s7,Bioimpedance reactance|S1|full|panel_gain,iii,interval,200,49.88366179196781,98.34459769312991,,models.interval_table on the archived E5c draws
+s7,Bioimpedance reactance|S2|full|candidate_gain,iii,interval,200,-0.20307493352985026,3.7558998860585344,,models.interval_table on the archived E5c draws
+s7,Bioimpedance reactance|S2|full|panel_gain,iii,interval,200,65.18730345660082,111.40593394101676,,models.interval_table on the archived E5c draws
+s7,Bioimpedance resistance|S1|full|candidate_gain,iii,interval,200,-0.8480207678138343,0.2615138687316942,,models.interval_table on the archived E5c draws
+s7,Bioimpedance resistance|S1|full|panel_gain,iii,interval,200,50.32393315862984,98.66216305760106,,models.interval_table on the archived E5c draws
+s7,Bioimpedance resistance|S2|full|candidate_gain,iii,interval,200,-0.5962402125813167,1.180903549622729,,models.interval_table on the archived E5c draws
+s7,Bioimpedance resistance|S2|full|panel_gain,iii,interval,200,65.43946099885925,111.76764337882261,,models.interval_table on the archived E5c draws
+s7,FEV1|S1|full|candidate_gain,iii,interval,200,10.849818459889443,25.24399717588218,,models.interval_table on the archived E5c draws
+s7,FEV1|S1|full|panel_gain,iii,interval,200,47.96338300562361,94.16436479891453,,models.interval_table on the archived E5c draws
+s7,FEV1|S2|full|candidate_gain,iii,interval,200,7.163964445554423,15.837773076940799,,models.interval_table on the archived E5c draws
+s7,FEV1|S2|full|panel_gain,iii,interval,200,63.20058952534621,106.68902062166882,,models.interval_table on the archived E5c draws
+s7,FVC|S1|full|candidate_gain,iii,interval,200,5.304067278496634,18.52404811189841,,models.interval_table on the archived E5c draws
+s7,FVC|S1|full|panel_gain,iii,interval,200,47.96338300562361,94.16436479891453,,models.interval_table on the archived E5c draws
+s7,FVC|S2|full|candidate_gain,iii,interval,200,1.609764960401571,8.385534035846147,,models.interval_table on the archived E5c draws
+s7,FVC|S2|full|panel_gain,iii,interval,200,63.20058952534621,106.68902062166882,,models.interval_table on the archived E5c draws
+s7,Femur neck BMD|S1|full|candidate_gain,iii,interval,200,-0.36041157789235667,2.419366530452955,,models.interval_table on the archived E5c draws
+s7,Femur neck BMD|S1|full|panel_gain,iii,interval,200,50.62510092355516,98.8466265941984,,models.interval_table on the archived E5c draws
+s7,Femur neck BMD|S2|full|candidate_gain,iii,interval,200,-0.3692245958142199,1.3655286451814916,,models.interval_table on the archived E5c draws
+s7,Femur neck BMD|S2|full|panel_gain,iii,interval,200,66.36254175421077,112.51348284428423,,models.interval_table on the archived E5c draws
+s7,Tandem stand time|S1|full|candidate_gain,iii,interval,200,-0.8671903385225627,4.271592175033563,,models.interval_table on the archived E5c draws
+s7,Tandem stand time|S1|full|panel_gain,iii,interval,200,32.69505073780243,85.89997437806451,,models.interval_table on the archived E5c draws
+s7,Tandem stand time|S2|full|candidate_gain,iii,interval,200,-1.0972370939385767,2.06427693552348,,models.interval_table on the archived E5c draws
+s7,Tandem stand time|S2|full|panel_gain,iii,interval,200,45.061510351253965,94.01541864162654,,models.interval_table on the archived E5c draws
+s7,Total bone mineral content|S1|full|candidate_gain,iii,interval,200,-1.1308621550102507,1.1659010300860213,,models.interval_table on the archived E5c draws
+s7,Total bone mineral content|S1|full|panel_gain,iii,interval,200,50.62510092355516,98.8466265941984,,models.interval_table on the archived E5c draws
+s7,Total bone mineral content|S2|full|candidate_gain,iii,interval,200,-0.6820514998357908,1.2282833268126747,,models.interval_table on the archived E5c draws
+s7,Total bone mineral content|S2|full|panel_gain,iii,interval,200,66.36254175421077,112.51348284428423,,models.interval_table on the archived E5c draws
+s7,FEV1|S1|full|candidate_gain,modern,interval,200,2.4651017366720858,58.620704103884584,,models.interval_table on the archived E5c draws
+s7,FEV1|S1|full|panel_gain,modern,interval,200,141.0397916158359,263.163060839274,,models.interval_table on the archived E5c draws
+s7,FEV1|S1|ten|candidate_gain,modern,interval,200,4.422224789300393,65.76608431139267,,models.interval_table on the archived E5c draws
+s7,FEV1|S1|ten|panel_gain,modern,interval,200,127.96982239528391,235.85619595675772,,models.interval_table on the archived E5c draws
+s7,FEV1|S2|full|candidate_gain,modern,interval,200,-0.7163517940818752,48.74364202378564,,models.interval_table on the archived E5c draws
+s7,FEV1|S2|full|panel_gain,modern,interval,200,152.09825924487086,280.9514224483004,,models.interval_table on the archived E5c draws
+s7,FEV1|S2|ten|candidate_gain,modern,interval,200,1.129900994336756,56.273548608040414,,models.interval_table on the archived E5c draws
+s7,FEV1|S2|ten|panel_gain,modern,interval,200,140.94210936702922,255.54435165662133,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S1|full|candidate_gain,modern,interval,200,-2.502441997290638,3.6032445990623168,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S1|full|panel_gain,modern,interval,200,126.87559955708842,206.42822870571104,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S1|ten|candidate_gain,modern,interval,200,-3.5648428863667014,5.029675072710472,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S1|ten|panel_gain,modern,interval,200,124.34058534396361,187.00268347682774,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S2|full|candidate_gain,modern,interval,200,-2.3752091448646397,1.743409637665092,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S2|full|panel_gain,modern,interval,200,148.1461387602034,228.45497838851546,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S2|ten|candidate_gain,modern,interval,200,-2.9311225288640914,2.672829849113018,,models.interval_table on the archived E5c draws
+s7,HOMA-IR|S2|ten|panel_gain,modern,interval,200,146.9732288219276,213.42288418338995,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S1|full|candidate_gain,modern,interval,200,-2.6065615948297,3.268864033969837,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S1|full|panel_gain,modern,interval,200,126.3614974959488,206.28159197545574,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S1|ten|candidate_gain,modern,interval,200,-0.854282954808478,8.729348232566123,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S1|ten|panel_gain,modern,interval,200,123.04838265898434,184.85257831984774,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S2|full|candidate_gain,modern,interval,200,-2.2072407838910824,2.735193469398224,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S2|full|panel_gain,modern,interval,200,147.18853456853958,228.23985462028043,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S2|ten|candidate_gain,modern,interval,200,-0.8246508793157936,8.14138028157496,,models.interval_table on the archived E5c draws
+s7,fasting glucose|S2|ten|panel_gain,modern,interval,200,146.13367704259116,211.50529024091588,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S1|full|candidate_gain,modern,interval,200,-2.98392709220675,2.6344353328168224,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S1|full|panel_gain,modern,interval,200,127.48262718692065,206.73433866431108,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S1|ten|candidate_gain,modern,interval,200,-4.290285349912021,2.5612186543246014,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S1|ten|panel_gain,modern,interval,200,125.62415431756591,188.81525240143466,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S2|full|candidate_gain,modern,interval,200,-2.603093896703816,1.2985954748277828,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S2|full|panel_gain,modern,interval,200,149.09098686508597,228.50779589734645,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S2|ten|candidate_gain,modern,interval,200,-3.1549225971448984,0.9422421452503087,,models.interval_table on the archived E5c draws
+s7,fasting insulin|S2|ten|panel_gain,modern,interval,200,147.61520823108611,214.1512918878481,,models.interval_table on the archived E5c draws
+s7,hsCRP|S1|full|candidate_gain,modern,interval,200,-1.6322277666885803,0.7743345458632961,,models.interval_table on the archived E5c draws
+s7,hsCRP|S1|full|panel_gain,modern,interval,200,105.23179043263195,181.3960063774019,,models.interval_table on the archived E5c draws
+s7,hsCRP|S1|ten|candidate_gain,modern,interval,200,-1.8277702011264598,1.0647874289877357,,models.interval_table on the archived E5c draws
+s7,hsCRP|S1|ten|panel_gain,modern,interval,200,107.27823585289187,172.95962328771114,,models.interval_table on the archived E5c draws
+s7,hsCRP|S2|full|candidate_gain,modern,interval,200,-1.540832064839111,0.6803442512199088,,models.interval_table on the archived E5c draws
+s7,hsCRP|S2|full|panel_gain,modern,interval,200,112.88092045949968,194.71723042589574,,models.interval_table on the archived E5c draws
+s7,hsCRP|S2|ten|candidate_gain,modern,interval,200,-1.631246371915802,0.9144415293030262,,models.interval_table on the archived E5c draws
+s7,hsCRP|S2|ten|panel_gain,modern,interval,200,115.28270749613561,191.61207777989648,,models.interval_table on the archived E5c draws

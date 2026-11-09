@@ -1,0 +1,14 @@
+component,max_points,max_amount,zero_score,unit,component_type
+F_TOTAL,5,0.8,0.0,cup,adequacy
+FWHOLEFRT,5,0.4,0.0,cup,adequacy
+VTOTALLEG,5,1.1,0.0,cup,adequacy
+VDRKGRLEG,5,0.2,0.0,cup,adequacy
+G_WHOLE,10,1.5,0.0,oz,adequacy
+D_TOTAL,10,1.3,0.0,cup,adequacy
+PFALLPROTLEG,5,2.5,0.0,oz,adequacy
+PFSEAPLANTLEG,5,0.8,0.0,oz,adequacy
+TFACIDS,10,2.5,1.2,ratio,adequacy
+G_REFINED,10,1.8,4.3,oz,moderation
+TSODI,10,1.1,2.0,gram,moderation
+ADD_SUGARS,10,6.5,26.0,percent of energy,moderation
+TSFAT,10,8.0,16.0,percent of energy,moderation

@@ -1,0 +1,40 @@
+marker,main_panel_var,nhanes3_var,source_file,units,median_lo,median_hi,hard_lo,hard_hi,in_primary_set,notes
+calcium,LBXSCA,SCP,lab,mg/dL,8.5,10.5,4.0,16,1,direct
+phosphorus,LBXSPH,PSP,lab,mg/dL,2.5,5.0,0.5,12,1,direct; locked panel rank 9
+sodium,LBXSNASI,NAPSI,lab,mmol/L,133.0,148.0,100.0,180,1,direct
+potassium,LBXSKSI,SKPSI,lab,mmol/L,3.4,5.3,1.5,9,1,direct
+chloride,LBXSCLSI,CLPSI,lab,mmol/L,96.0,112.0,70.0,140,1,direct
+bicarbonate,LBXSC3SI,C3PSI,lab,mmol/L,21.0,31.0,3.0,60,1,direct; hard bounds = impossibility not rarity
+lymphocytes,LBDLYMNO,LMP,lab,10^3/uL,1.2,3.2,0.0,200,1,Coulter 3-part; absolute count; hard bounds = impossibility not rarity
+mononuclear,LBDMONO,MOP,lab,10^3/uL,0.2,1.1,0.0,10,1,Coulter mononuclear; proxy for monocytes
+granulocytes,LBDNENO,GRP,lab,10^3/uL,2.5,6.5,0.0,40,1,Coulter granulocyte; proxy for neutrophils (locked panel rank 4)
+urea_nitrogen,LBXSBU,BUP,lab,mg/dL,9.0,22.0,1.0,200,1,direct
+uric_acid,LBXSUA,UAP,lab,mg/dL,3.5,7.5,0.1,25,1,direct; hard bounds = impossibility not rarity
+urine_albumin,,UBP,lab,ug/mL,0.5,40.0,0.0,30000,1,input to ACR; heavily right-skewed
+urine_creatinine,,URP,lab,mg/dL,60.0,200.0,1.0,900,1,input to ACR
+creatinine,,CEP,lab,mg/dL,0.6,1.4,0.1,20,1,input to eGFR
+cholesterol,LBXTC,TCP,lab,mg/dL,165.0,235.0,50.0,1000,1,direct; hard bounds = impossibility not rarity
+hdl_cholesterol,LBDHDD,HDP,lab,mg/dL,38.0,62.0,5.0,200,1,direct
+triglycerides,LBXSTR,TGP,lab,mg/dL,80.0,190.0,10.0,10000,1,lipid-panel variable; TRP is phase-limited; hard bounds = impossibility not rarity
+albumin,LBXSAL,AMP,lab,g/dL,3.7,4.9,0.5,7,1,direct; locked panel rank 8; hard bounds = impossibility not rarity
+alt,LBXSATSI,ATPSI,lab,U/L,7.0,32.0,1.0,2000,1,direct; locked panel rank 1
+ast,LBXSASSI,ASPSI,lab,U/L,13.0,32.0,1.0,2000,1,direct
+bilirubin,LBXSTB,TBP,lab,mg/dL,0.2,1.0,0.0,50,1,direct; hard bounds = impossibility not rarity
+ldh,LBXSLDSI,LDPSI,lab,U/L,90.0,260.0,20.0,3000,1,direct
+alkaline_phosphatase,LBXSAPSI,APPSI,lab,U/L,45.0,130.0,5.0,1000,1,direct
+hba1c,LBXGH,GHP,lab,%,4.6,6.3,2.0,20,1,direct
+platelets,LBXPLTSI,PLP,lab,10^3/uL,190.0,330.0,5.0,1500,1,direct; locked panel rank 7
+mean_platelet_volume,LBXMPSI,PVPSI,lab,fL,6.5,10.5,3.0,20,1,direct; hard bounds = impossibility not rarity
+haemoglobin,LBXHGB,HGP,lab,g/dL,12.0,16.5,3.0,25,1,direct
+mcv,LBXMCVSI,MVPSI,lab,fL,83.0,97.0,50.0,130,1,direct; locked panel rank 3
+mchc,LBXMC,MHP,lab,g/dL,31.0,37.0,20.0,40,1,direct; hard bounds = impossibility not rarity
+rdw,LBXRDW,RWP,lab,%,11.5,14.5,8.0,40,1,direct; locked panel rank 2
+rbc_folate,RBC_folate,RBP,lab,ng/mL,100.0,400.0,5.0,3000,1,direct
+systolic,systolic,PEPMNK1R,exam,mmHg,110.0,140.0,50.0,300,1,overall average K1
+diastolic,diastolic,PEPMNK5R,exam,mmHg,65.0,88.0,20.0,200,1,overall average K5
+pulse,BPXPLS,PEP6DR,exam,bpm,60.0,85.0,25.0,200,1,direct; locked panel rank 10
+waist,,BMPWAIST,exam,cm,80.0,105.0,40.0,200,1,input to waist-to-height ratio
+height,,BMPHT,exam,cm,158.0,178.0,100.0,230,1,input to waist-to-height ratio
+bmi,,BMPBMI,exam,kg/m2,23.0,30.0,10.0,80,0,young-healthy reference criterion only
+ggt,LBXSGTSI,GGPSI,lab,U/L,12.0,40.0,1.0,2000,0,PHASE-LIMITED 48pct in phase 1; locked panel rank 5; phase-2 sensitivity only
+globulin,LBXSGB,GBP,lab,g/dL,2.4,3.4,0.5,8,0,PHASE-LIMITED 44pct in phase 1; excluded from primary

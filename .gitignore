@@ -1,0 +1,5 @@
+# Everything the scripts make. Rebuilt by running them; never committed.
+1_prepare_nhanes/outputs/
+2_prepare_nhanes_iii/outputs/
+3_results/outputs/
+__pycache__/

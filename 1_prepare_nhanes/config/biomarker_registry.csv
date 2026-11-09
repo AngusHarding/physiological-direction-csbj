@@ -1,0 +1,64 @@
+marker,display_name,source_component,source_unit,harmonised_unit,measured_or_derived,physiological_system,final_38_member,complete_case_role,reference_screen_role,frozen_transform,transformation_status,adverse_direction,assay_notes
+LBXSAL,Serum albumin,standard_biochemistry,g/dL,g/dL,measured,liver,yes,scored,no,identity,awaiting_transformation_audit,low_only,2017-2018 crossover corrected
+LBXSATSI,Alanine aminotransferase,standard_biochemistry,U/L,U/L,measured,liver,yes,scored,no,reciprocal,awaiting_transformation_audit,high_only,2017-2018 crossover corrected
+LBXSASSI,Aspartate aminotransferase,standard_biochemistry,U/L,U/L,measured,liver,yes,scored,no,reciprocal,historical_selector_agrees,high_only,2017-2018 crossover corrected
+LBXSAPSI,Alkaline phosphatase,standard_biochemistry,U/L,U/L,measured,liver,yes,scored,no,log,historical_selector_agrees,high_only,2001 prefix rename; 2017-2018 log10 crossover corrected
+LBXSBU,Blood urea nitrogen,standard_biochemistry,mg/dL,mg/dL,measured,kidney,yes,scored,no,cbrt,awaiting_transformation_audit,high_only,2017-2018 crossover corrected
+LBXSCA,Total calcium,standard_biochemistry,mg/dL,mg/dL,measured,calcium,yes,scored,no,reciprocal,awaiting_transformation_audit,two_sided,mg/dL retained; SI duplicate excluded
+LBXSC3SI,Bicarbonate,standard_biochemistry,mmol/L,mmol/L,measured,electrolytes,yes,scored,no,identity,historical_selector_agrees,two_sided,SI-only measurement
+LBXSCR,Serum creatinine,standard_biochemistry,mg/dL,mg/dL,measured,kidney,no,screen_only,yes,,not_scored,not_applicable,Used to derive eGFR; three assay-era corrections
+LBXSGTSI,Gamma-glutamyl transferase,standard_biochemistry,U/L,U/L,measured,liver,yes,scored,no,reciprocal,historical_selector_agrees,high_only,2017-2018 crossover corrected
+LBXSIR,Serum iron,standard_biochemistry,ug/dL,ug/dL,measured,excluded,no,not_required,no,,excluded,not_applicable,Excluded from final ageing panel; 2017-2018 correction may create non-positive values
+LBXSLDSI,Lactate dehydrogenase,standard_biochemistry,U/L,U/L,measured,liver,yes,scored,no,reciprocal,awaiting_transformation_audit,high_only,2017-2018 crossover corrected
+LBXSPH,Serum phosphorus,standard_biochemistry,mg/dL,mg/dL,measured,calcium,yes,scored,no,identity,awaiting_transformation_audit,two_sided,2001 prefix rename; mg/dL retained
+LBXSTB,Total bilirubin,standard_biochemistry,mg/dL,mg/dL,measured,liver,yes,scored,no,cbrt,historical_selector_agrees,high_only,2001 prefix rename
+LBXSTP,Total protein,standard_biochemistry,g/dL,g/dL,measured,excluded,no,not_required,no,,excluded,not_applicable,Not a final scored marker
+LBXSUA,Uric acid,standard_biochemistry,mg/dL,mg/dL,measured,kidney,yes,scored,no,cbrt,historical_selector_agrees,high_only,2017-2018 crossover corrected
+LBXSNASI,Sodium,standard_biochemistry,mmol/L,mmol/L,measured,electrolytes,yes,scored,no,reciprocal,awaiting_transformation_audit,two_sided,SI-only measurement
+LBXSKSI,Potassium,standard_biochemistry,mmol/L,mmol/L,measured,electrolytes,yes,scored,no,log,historical_selector_agrees,two_sided,SI-only measurement
+LBXSCLSI,Chloride,standard_biochemistry,mmol/L,mmol/L,measured,electrolytes,yes,scored,no,identity,awaiting_transformation_audit,two_sided,SI-only measurement
+LBXSOSSI,Osmolality,standard_biochemistry,mmol/kg,mmol/kg,measured,excluded,no,not_required,no,,excluded,not_applicable,Removed from final panel during collinearity review
+LBXSGB,Globulin,standard_biochemistry,g/dL,g/dL,measured,immune,yes,scored,no,sqrt,awaiting_transformation_audit,two_sided,Measured globulin
+LBXSCH,Total cholesterol BIOPRO,standard_biochemistry,mg/dL,mg/dL,measured,overlap,no,not_required,no,,overlap_source,not_applicable,Final LBXTC comes from dedicated full-sample lipid harmonisation
+LBXSTR,Triglycerides BIOPRO,standard_biochemistry,mg/dL,mg/dL,measured,lipids,yes,scored,no,log,newer_panel_source,high_only,Full-sample BIOPRO triglycerides; 2017-2018 crossover corrected
+LBXSGL,Serum glucose BIOPRO,standard_biochemistry,mg/dL,mg/dL,measured,overlap,no,not_required,no,,overlap_source,not_applicable,Final metabolic marker is HbA1c from dedicated component
+systolic,Systolic blood pressure,cardiovascular,mmHg,mmHg,derived,cardiovascular,yes,scored,no,reciprocal,awaiting_transformation_audit,high_only,Mean of available readings 2-4 after zero removal
+diastolic,Diastolic blood pressure,cardiovascular,mmHg,mmHg,derived,cardiovascular,yes,scored,no,reciprocal,awaiting_transformation_audit,two_sided,Mean of available readings 2-4 after zero removal
+BPXPLS,Pulse rate,cardiovascular,bpm,bpm,measured,cardiovascular,yes,scored,no,reciprocal,awaiting_transformation_audit,two_sided,60-second pulse rate
+BPXPULS,Pulse regularity,cardiovascular,binary,binary,measured,cardiovascular,no,not_required,yes,,not_scored,not_applicable,Recode 1 regular to 0 and 2 irregular to 1; missing retained
+LBXWBCSI,White blood cell count,cbc,10^9/L,10^9/L,measured,immune,no,derivation_input,no,,not_scored,not_applicable,Retained without bounds because extreme disease values can be real
+LBXLYPCT,Lymphocyte percentage,cbc,%,%,measured,immune,no,derivation_input,no,,not_scored,not_applicable,Used to derive absolute lymphocyte count
+LBXMOPCT,Monocyte percentage,cbc,%,%,measured,immune,no,derivation_input,no,,not_scored,not_applicable,Used to derive absolute monocyte count
+LBXNEPCT,Neutrophil percentage,cbc,%,%,measured,immune,no,derivation_input,no,,not_scored,not_applicable,Used to derive absolute neutrophil count
+LBXEOPCT,Eosinophil percentage,cbc,%,%,measured,immune,no,derivation_input,no,,not_scored,not_applicable,Used to derive absolute eosinophil count
+LBXBAPCT,Basophil percentage,cbc,%,%,measured,immune,no,derivation_input,no,,not_scored,not_applicable,Used to derive absolute basophil count
+LBXRBCSI,Red blood cell count,cbc,10^12/L,10^12/L,measured,red_blood_cell,no,derivation_input,no,,not_scored,not_applicable,Used to derive HCT MCH and MCHC
+LBXHGB,Haemoglobin,cbc,g/dL,g/dL,measured,red_blood_cell,yes,scored,no,identity,historical_selector_agrees,two_sided,Direct analyser measurement
+LBXMCVSI,Mean corpuscular volume,cbc,fL,fL,measured,red_blood_cell,yes,scored,no,identity,historical_selector_agrees,two_sided,Direct measurement screened to 50-130 fL
+LBXRDW,Red cell distribution width,cbc,%,%,measured,red_blood_cell,yes,scored,no,reciprocal,historical_selector_agrees,high_only,Direct measurement screened to 10-45 percent
+LBXPLTSI,Platelet count,cbc,10^9/L,10^9/L,measured,platelet,yes,scored,no,cbrt,historical_selector_agrees,two_sided,999.9 analyser top-code removed
+LBXMPSI,Mean platelet volume,cbc,fL,fL,measured,platelet,yes,scored,no,reciprocal,historical_selector_agrees,two_sided,Direct analyser measurement
+LBXMC,Mean corpuscular haemoglobin concentration,cbc_derived,g/dL,g/dL,derived,red_blood_cell,yes,scored,no,identity,historical_selector_agrees,two_sided,HGB*100 divided by calculated HCT
+URXUMA,Urine albumin,kidney_urine,ug/mL,mg/L,measured,kidney,no,derivation_input,no,,not_scored,not_applicable,Numerically equivalent units; used to derive ACR
+URXUCR,Urine creatinine,kidney_urine,mg/dL,mg/dL,measured,kidney,no,derivation_input,no,,not_scored,not_applicable,Hydration-dependent input used to derive ACR
+ACR,Urine albumin-creatinine ratio,kidney_derived,mg/g,mg/g,derived,kidney,yes,scored,no,log,historical_selector_agrees,high_only,URXUMA/URXUCR*100
+eGFR,Estimated glomerular filtration rate,kidney_derived,mL/min/1.73m2,mL/min/1.73m2,derived,kidney,yes,scored,no,identity,historical_selector_agrees,low_only,CKD-EPI 2021 race-free creatinine equation
+kidney_fail,Self-reported weak or failing kidneys,kidney_questionnaire,binary,binary,reported,kidney,no,not_required,yes,,not_scored,not_applicable,Reference exclusion flag; unknown responses are not coded healthy
+BMXWT,Measured body weight,anthropometry,kg,kg,measured,metabolism,no,derivation_input,no,,not_scored,not_applicable,Used to calculate BMI
+BMXHT,Measured standing height,anthropometry,cm,cm,measured,metabolism,no,derivation_input,no,,not_scored,not_applicable,Used to calculate BMI and WHtR
+BMXWAIST,Measured waist circumference,anthropometry,cm,cm,measured,metabolism,no,derivation_input,no,,not_scored,not_applicable,Used to calculate WHtR
+BMI,Body mass index,anthropometry_derived,kg/m2,kg/m2,derived,metabolism,no,screen_only,yes,,not_scored,not_applicable,Healthy-reference filter deliberately excluded from scoring to prevent circularity
+WHtR,Waist-to-height ratio,anthropometry_derived,ratio,ratio,derived,metabolism,yes,scored,no,reciprocal,historical_selector_agrees,high_only,Waist divided by height; historically mislabeled WHR
+LBXTC,Total cholesterol,cholesterol_hdl,mg/dL,mg/dL,measured,lipids,yes,scored,no,log,historical_selector_agrees,two_sided,Dedicated full-sample lipid source; preferred over BIOPRO overlap LBXSCH
+LBDHDD,HDL cholesterol,cholesterol_hdl,mg/dL,mg/dL,measured,lipids,yes,scored,no,cbrt,historical_selector_agrees,low_only,Harmonised from LBDHDL LBXHDD and LBDHDD
+LBXTR,Fasting triglycerides,fasting_triglycerides,mg/dL,mg/dL,measured,lipids,no,not_required,no,,superseded,not_applicable,Fasting-subsample field audited but not admitted to final panel
+LBDLDL,Calculated LDL cholesterol,fasting_triglycerides,mg/dL,mg/dL,derived,lipids,no,not_required,no,,excluded,not_applicable,Friedewald-derived and deterministically redundant; absent when triglycerides are high
+LBXGH,Glycated haemoglobin,hba1c,%,%,measured,metabolism,yes,scored,no,log,historical_selector_agrees,high_only,No crossover correction; documented cycle effects retained
+LBDRBFSI,Bio-Rad RBC folate,folate,nmol/L,nmol/L,measured,red_blood_cell,no,derivation_input,no,,assay_harmonised,not_applicable,1999-2006 input converted to microbiologic scale
+LBDFOLSI,Serum folate,folate,nmol/L,nmol/L,measured,red_blood_cell,no,derivation_input,no,,not_scored,not_applicable,Required only for 1999-2006 folate crossover
+RBC_folate,Harmonised red blood cell folate,folate,nmol/L,nmol/L,harmonised,red_blood_cell,yes,scored,no,log,historical_selector_agrees,low_only,Early Bio-Rad cycles converted; later microbiologic assay used directly
+LBDLYMNO,Absolute lymphocyte count,cbc_derived,10^9/L,10^9/L,derived,immune,yes,scored,no,cbrt,historical_selector_agrees,two_sided,LBXWBCSI*LBXLYPCT/100; values above 10 made missing before ratio derivation
+LBDNENO,Absolute neutrophil count,cbc_derived,10^9/L,10^9/L,derived,immune,yes,scored,no,log,historical_selector_agrees,two_sided,LBXWBCSI*LBXNEPCT/100
+LBDMONO,Absolute monocyte count,cbc_derived,10^9/L,10^9/L,derived,immune,yes,scored,no,log,historical_selector_agrees,high_only,LBXWBCSI*LBXMOPCT/100
+LBDEONO,Absolute eosinophil count,cbc_derived,10^9/L,10^9/L,derived,immune,yes,scored,no,cbrt,historical_selector_agrees,high_only,LBXWBCSI*LBXEOPCT/100; frozen transform shift 5.1511000000000005e-06
+LBDBANO,Absolute basophil count,cbc_derived,10^9/L,10^9/L,derived,immune,yes,scored,no,sqrt,historical_selector_agrees,high_only,LBXWBCSI*LBXBAPCT/100; frozen transform shift 1.8468e-06

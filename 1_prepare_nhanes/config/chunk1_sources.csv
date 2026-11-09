@@ -1,0 +1,12 @@
+cycle,demo_path,hsq_path
+1999-2000,1999-2000/demographics/DEMO.XPT,1999-2000/questionaire/HSQ.XPT
+2001-2002,2001-2002/demographics/DEMO_B.XPT,2001-2002/questionaire/HSQ_B.XPT
+2003-2004,2003-2004/demographics/DEMO_C.XPT,2003-2004/questionaire/HSQ_C.XPT
+2005-2006,2005-2006/demographics/DEMO_D.XPT,2005-2006/questionaire/HSQ_D.XPT
+2007-2008,2007-2008/demographics/DEMO_E.XPT,2007-2008/questionaire/HSQ_E.XPT
+2009-2010,2009-2010/demographics/DEMO_F.XPT,2009-2010/questionaire/HSQ_F.XPT
+2011-2012,2011-2012/demographics/DEMO_G.XPT,2011-2012/questionaire/HSQ_G.XPT
+2013-2014,2013-2014/demographic/DEMO_H.XPT,2013-2014/questionaire/HSQ_H.XPT
+2015-2016,2015-2016/demographic/DEMO_I.XPT,2015-2016/questionaire/HSQ_I.XPT
+2017-2018,2017-2018/demographics/DEMO_J.XPT,2017-2018/questionaire/HSQ_J.XPT
+

@@ -1,0 +1,2 @@
+section,era,columns,tolerance,reason
+s2,iii,SC|*;PC|*;SC-SS|*;PC-SS|*;PC-SC|*,1e-05,R088 polished the NHANES III SC and PC fits with statsmodels (tol 1e-9); the pipeline fits every NHANES III model with lifelines. Differences up to 7.5e-6 (R120).

@@ -1,0 +1,39 @@
+marker,selected_transform,orientation,adverse_direction,physiological_system,direction_basis
+LBXSCA,sqrt,1,two_sided,calcium,hypocalcaemia and hypercalcaemia are both pathological
+LBXSPH,identity,1,two_sided,calcium,hypophosphataemia and hyperphosphataemia are both pathological
+systolic,log,1,high_only,cardiovascular,hypertension is the disease axis; hypotension is not scored in this ambulatory cohort
+diastolic,identity,1,high_only,cardiovascular,same hypertension disease axis as systolic pressure
+BPXPLS,identity,1,high_only,cardiovascular,high pulse reflects sympathetic overdrive or poor fitness; the low tail is clinically ambiguous without fitness or rhythm data
+LBDLYMNO,sqrt,1,two_sided,immune,lymphopenia and lymphocytosis are both adverse
+LBDNENO,sqrt,1,two_sided,immune,neutropenia and neutrophilia are both adverse
+LBDMONO,sqrt,1,high_only,immune,high monocytes reflect myeloid skew and inflammaging; the low tail is not an ageing deficit
+LBDEONO,cbrt,1,high_only,immune,eosinophilia is adverse; the near-zero lower tail is not meaningful
+LBDBANO,sqrt,1,high_only,immune,basophilia is adverse; the near-zero lower tail is not meaningful
+LBXSGB,sqrt,1,two_sided,immune,low globulin can reflect immunodeficiency or hepatic dysfunction and high globulin inflammation or paraproteinaemia
+LBXSBU,log,1,high_only,kidney,high blood urea nitrogen reflects azotaemia; the low tail is not scored as renal ageing
+LBXSUA,identity,1,high_only,kidney,hyperuricaemia is adverse; low urate is not scored
+LBXSAL,identity,1,low_only,liver,hypoalbuminaemia reflects inflammatory or hepatic dysfunction; high albumin commonly reflects dehydration
+LBXSATSI,reciprocal,-1,high_only,liver,high alanine aminotransferase reflects hepatocellular injury
+LBXSASSI,reciprocal,-1,high_only,liver,high aspartate aminotransferase reflects hepatocellular or muscle injury
+LBXSTB,cbrt,1,high_only,liver,hyperbilirubinaemia is adverse; low bilirubin is not scored
+LBXSLDSI,log,1,high_only,liver,high lactate dehydrogenase reflects tissue damage haemolysis or malignancy
+LBXSGTSI,reciprocal,-1,high_only,liver,high gamma-glutamyl transferase reflects cholestasis or alcohol-related injury
+LBXSAPSI,log,1,high_only,liver,high alkaline phosphatase reflects cholestatic or bone pathology
+LBXGH,reciprocal,-1,high_only,metabolism,high glycated haemoglobin is the dysglycaemic disease axis
+WHtR,identity,1,high_only,metabolism,high waist-to-height ratio reflects central adiposity
+LBXTC,identity,1,two_sided,lipids,high cholesterol is atherogenic while low cholesterol can accompany frailty occult disease or hepatic dysfunction
+LBDHDD,sqrt,1,low_only,lipids,low HDL cholesterol is adverse; high HDL is not scored
+LBXSTR,log,1,high_only,lipids,hypertriglyceridaemia is adverse
+LBXPLTSI,sqrt,1,two_sided,platelet,thrombocytopenia and thrombocytosis are both adverse
+LBXMPSI,identity,1,two_sided,platelet,both tails can reflect abnormal platelet production
+LBXHGB,identity,1,two_sided,red_blood_cell,anaemia and polycythaemia are both adverse
+LBXMCVSI,sqrt,1,two_sided,red_blood_cell,microcytosis and macrocytosis are both adverse
+LBXMC,identity,1,two_sided,red_blood_cell,low MCHC reflects hypochromia while high MCHC can reflect red-cell pathology
+LBXRDW,reciprocal,-1,high_only,red_blood_cell,high red-cell distribution width reflects anisocytosis; the low tail is not meaningful
+RBC_folate,log,1,low_only,red_blood_cell,low red-cell folate reflects folate deficiency; the high tail is not scored
+LBXSNASI,sqrt,1,two_sided,electrolytes,hyponatraemia and hypernatraemia are both adverse
+LBXSKSI,identity,1,two_sided,electrolytes,hypokalaemia and hyperkalaemia are both adverse
+LBXSCLSI,sqrt,1,two_sided,electrolytes,hypochloraemia and hyperchloraemia can reflect acid-base pathology
+LBXSC3SI,identity,1,two_sided,electrolytes,low and high bicarbonate can reflect acidosis and alkalosis respectively
+ACR,log,1,high_only,kidney,high albumin-creatinine ratio reflects albuminuria
+eGFR,identity,1,low_only,kidney,low estimated glomerular filtration rate reflects chronic kidney disease

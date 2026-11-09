@@ -1,0 +1,2 @@
+section,table,row,column,made,reviewed,reason
+s1,table1,9,NHANES III: Women,17.0,17,"same value; the archived display CSV dropped the trailing zero, and every other percentage in Table 1 has one decimal"

@@ -1,0 +1,4 @@
+# Copy this information to a local environment variable or ignored local config.
+# Do not commit workstation-specific paths to the public repository.
+raw_data_root: D:/path/to/NHANES_Raw_Data
+

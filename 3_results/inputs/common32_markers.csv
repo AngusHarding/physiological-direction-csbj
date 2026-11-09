@@ -1,0 +1,33 @@
+key,name,unit,modern_column,nhanes3_column,modern_recipe,nhanes3_recipe,joint_recipe,adverse_side
+calcium,calcium,mg/dL,LBXSCA,calcium,sqrt,identity,sqrt,two_sided
+phosphorus,phosphorus,mg/dL,LBXSPH,phosphorus,identity,identity,identity,two_sided
+sodium,sodium,mmol/L,LBXSNASI,sodium,sqrt,identity,sqrt,two_sided
+potassium,potassium,mmol/L,LBXSKSI,potassium,identity,identity,identity,two_sided
+chloride,chloride,mmol/L,LBXSCLSI,chloride,sqrt,identity,sqrt,two_sided
+bicarbonate,bicarbonate,mmol/L,LBXSC3SI,bicarbonate,identity,sqrt,sqrt,two_sided
+lymphocytes,lymphocytes,10^3/uL,LBDLYMNO,lymphocytes,sqrt,log,log,two_sided
+granulocytes,granulocytes,10^3/uL,granulocytes,granulocytes,sqrt,sqrt,sqrt,two_sided
+urea_nitrogen,urea nitrogen,mg/dL,LBXSBU,urea_nitrogen,log,log,log,high_only
+uric_acid,uric acid,mg/dL,LBXSUA,uric_acid,identity,identity,identity,high_only
+cholesterol,total cholesterol,mg/dL,LBXTC,cholesterol,identity,sqrt,sqrt,two_sided
+hdl_cholesterol,HDL cholesterol,mg/dL,LBDHDD,hdl_cholesterol,sqrt,sqrt,sqrt,low_only
+triglycerides,triglycerides,mg/dL,LBXSTR,triglycerides,log,log,log,high_only
+albumin,albumin,g/dL,LBXSAL,albumin,identity,identity,identity,low_only
+alt,ALT,U/L,LBXSATSI,alt,reciprocal,log,log,high_only
+ast,AST,U/L,LBXSASSI,ast,reciprocal,reciprocal,reciprocal,high_only
+bilirubin,total bilirubin,mg/dL,LBXSTB,bilirubin,cbrt,cbrt,cbrt,high_only
+ldh,LDH,U/L,LBXSLDSI,ldh,log,log,log,high_only
+alkaline_phosphatase,alkaline phosphatase,U/L,LBXSAPSI,alkaline_phosphatase,log,log,log,high_only
+hba1c,HbA1c,%,LBXGH,hba1c,reciprocal,reciprocal,reciprocal,high_only
+platelets,platelets,10^3/uL,LBXPLTSI,platelets,sqrt,sqrt,sqrt,two_sided
+mean_platelet_volume,mean platelet volume,fL,LBXMPSI,mean_platelet_volume,identity,sqrt,sqrt,two_sided
+haemoglobin,haemoglobin,g/dL,LBXHGB,haemoglobin,identity,identity,identity,two_sided
+mcv,MCV,fL,LBXMCVSI,mcv,sqrt,sqrt,sqrt,two_sided
+mchc,MCHC,g/dL,LBXMC,mchc,identity,identity,identity,two_sided
+rdw,RDW,%,LBXRDW,rdw,reciprocal,reciprocal,reciprocal,high_only
+systolic,systolic pressure,mmHg,systolic,systolic,log,reciprocal,reciprocal,high_only
+diastolic,diastolic pressure,mmHg,diastolic,diastolic,identity,identity,identity,high_only
+pulse,pulse,beats/min,BPXPLS,pulse,identity,sqrt,sqrt,high_only
+ACR,albumin-to-creatinine ratio,mg/g,ACR,ACR,log,log,log,high_only
+eGFR,eGFR,mL/min/1.73 m2,eGFR,eGFR,identity,sqrt,sqrt,low_only
+WHtR,waist-to-height ratio,ratio,WHtR,WHtR,identity,sqrt,sqrt,high_only
