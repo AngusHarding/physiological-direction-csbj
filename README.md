@@ -4,22 +4,23 @@ Code for Harding et al. (2026), *Distance, Survival and Sex: Addressing a
 Three-Way Trade-Off in Healthspan Trial Recruitment*, Computational and
 Structural Biotechnology Journal.
 
-It goes from the raw NHANES files to every number quoted in the paper's
-Results and to Tables 1, 2 and 4, and ends by checking each number against the
-paper. It also draws Figures 1 and 2 as published, the source tables of
-Figure 4, and checking versions of Figures 3 and 5–7 (see `3_results/README.md`).
+It goes from the raw NHANES files to every number quoted in the paper's Results,
+except five robustness checks (see "Not included"), and to Tables 1, 2 and 4,
+and ends by checking each number against the paper. It also draws Figures 1 and
+2 as published, the source tables of Figure 4, and checking versions of Figures
+3 and 5–7 (see `3_results/README.md`).
 
 ```
 raw NHANES 1999–2018 ──► 1_prepare_nhanes ──────┐
                                                 ├──► 3_results ──► Tables 1, 2, 4, figures and
-raw NHANES III ────────► 2_prepare_nhanes_iii ──┘                 every number quoted in the Results,
+raw NHANES III ────────► 2_prepare_nhanes_iii ──┘                 the numbers quoted in the Results,
                                                                   then check_against_paper: PASS or FAIL
 ```
 
 ## Two ways to reproduce the paper
 
 **Quick: start from the prepared tables.** Download `prepared_tables.zip` from
-the data deposit (DOI: to be added on publication) and unzip it into this
+the data deposit (https://doi.org/10.5281/zenodo.24096988) and unzip it into this
 folder; it fills `1_prepare_nhanes/outputs/` and `2_prepare_nhanes_iii/outputs/`.
 Then:
 
@@ -62,12 +63,15 @@ Every analysis script was copied from the code that produced the paper. The
 lines changed to make it run from this folder are marked `# public_code`.
 
 Not included: the authors' full working archive, with the development analyses
-that led to the final specification; the Results 4 penalty search (the Results
-use its stored choices); the scripts the authors used to verify the Results 3–7
-intervals against the complete archived bootstrap draws (a full run recomputes
-those intervals instead); and the renderers that drew the published Figures 3–7.
-The paper's supplementary data files hold the numbers behind every figure and
-table.
+that led to the final specification; five robustness checks quoted in the
+Results, which come from that archive (Supplementary Tables S1.4–S1.6, S2.3,
+S4.5 and S4.6: the all-cause and survey-design hazard ratios, the complete-panel
+ratio, the alternative-reference comparison and the 32-marker score); the
+Results 4 penalty search (the Results use its stored choices); the scripts the
+authors used to verify the Results 3–7 intervals against the complete archived
+bootstrap draws (a full run recomputes those intervals instead); and the
+renderers that drew the published Figures 3–7. The paper's supplementary data
+files hold the numbers behind every figure and table.
 
 ## Reading order
 
@@ -111,6 +115,7 @@ the CRAN package heiscore.data (CC0).
 
 ## Licence and citation
 
-The code is released under the MIT licence (`LICENSE`). The prepared tables in
-the data deposit are released under CC BY 4.0. If you use either, please cite
-the paper (`CITATION.cff`).
+The code is released under the MIT licence (`LICENSE`) and archived as release
+v1.0.0 at https://doi.org/10.5281/zenodo.24097390. The prepared tables in the
+data deposit (https://doi.org/10.5281/zenodo.24096988) are released under
+CC BY 4.0. If you use either, please cite the paper (`CITATION.cff`).
