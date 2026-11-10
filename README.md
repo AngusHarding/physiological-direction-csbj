@@ -113,6 +113,17 @@ and do not try to assess the disclosure methods that protect participants.
 Please cite NCHS as the source of the data. The HEI-2020 scoring data come from
 the CRAN package heiscore.data (CC0).
 
+## How this code was written
+
+The authors wrote, restructured and checked this code with two large language
+models, Claude (Anthropic) and ChatGPT (OpenAI), working under author direction:
+Claude mainly on the code and its comments, ChatGPT mainly on independent review
+of the code against the Methods. Neither is an author; the authors are
+responsible for the code. Commits made with Claude carry a `Co-Authored-By`
+line. The corresponding author ran the code from the public NHANES files and
+read it against the Methods before release (see the paper's statement on the
+use of large language models).
+
 ## Licence and citation
 
 The code is released under the MIT licence (`LICENSE`) and archived as release
