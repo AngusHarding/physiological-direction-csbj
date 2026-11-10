@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/02_harmonise_standard_biochemistry.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Renames biochemistry variables to one name per marker and
+#               applies the assay corrections: creatinine calibration (1999-2000,
+#               2005-2006) and the 2017-2018 Roche-to-Beckman bridging equations;
+#               nonpositive values set to missing.
+#
+# METHODS       Supp. Section Zero, "Assay calibration" and "Cleaning" (Table S0.3).
+# =============================================================================
 """Apply frozen biochemistry renames, assay corrections and complete-casing."""
 
 from pathlib import Path

@@ -1,3 +1,15 @@
+# =============================================================================
+# READ ME FIRST: make_all.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Runs the seven Results scripts in paper order, then
+#               check_against_paper.py. Short mode (default): every point
+#               estimate, table and figure, plus a few bootstrap draws per
+#               section, compared one by one with the archived draws. Full mode
+#               (--full): every bootstrap, so every interval is recomputed.
+#
+# METHODS       None. It calculates nothing; this is the
+#               command a reader runs to reproduce the Results.
+# =============================================================================
 """Run every Results section, then check the outputs against the paper.
 
 This script estimates nothing itself. It runs the seven section scripts in

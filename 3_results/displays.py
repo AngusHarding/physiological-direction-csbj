@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: displays.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Shared figure style, and writes tables as CSV and as
+#               all-text Excel files so that no value is reformatted.
+#
+# METHODS       None. Formatting only; it receives finished results.
+# =============================================================================
 """Shared look for figures and the one way tables are written.
 
 Figures use one font, one palette and one set of sizes, so the panels of

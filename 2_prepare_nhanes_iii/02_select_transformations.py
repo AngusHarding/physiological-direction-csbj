@@ -1,3 +1,21 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/02_select_transformations.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Chooses NHANES III's own transformation for each marker with
+#               exactly the same rule as NHANES 1999-2018 (it imports that
+#               code), on the 13,195-adult panel, women and men pooled. No
+#               mortality variable is read.
+#
+# METHODS       Supp. Section Zero, "Transformations": "chosen separately in each
+#               era in the complete adult panel (29,053 in NHANES 1999-2018;
+#               13,195 in NHANES III) with women and men pooled ... the eras
+#               could differ (Table S0.6)."
+#
+# PSEUDOCODE
+#   for each marker: the decision rule of
+#     1_prepare_nhanes/7_marker_panel/02_select_transformations.py
+#   compare the choices with NHANES 1999-2018 (report only)
+# =============================================================================
 """Select transformations within NHANES III, and compare against continuous NHANES.
 
 SPECIFICATION: SPECIFICATION.md Decision 7 and section 6a layers 3-4.

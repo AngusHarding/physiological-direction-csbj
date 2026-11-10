@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/04_harmonise_alcohol.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Converts the alcohol answers to drinks per week (screened
+#               non-drinkers and zero frequency = 0; refused or unknown stay
+#               missing).
+#
+# METHODS       "Young-healthy reference" ("drank lightly or not at all";
+#               Supp. Section Zero: "no more than seven alcoholic drinks per week"); Table 1.
+# =============================================================================
 """Harmonize past-year average alcohol intake as drinks per week.
 
 Older cycles record a frequency count and unit; 2017-2018 records a frequency

@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/3_body_and_bp/03_derive_anthropometry_features.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Derives BMI (used only to screen the reference) and
+#               waist-to-height ratio (a panel marker).
+#
+# METHODS       Supp. Section Zero: "Body mass index was used only to screen the
+#               reference, whereas waist-to-height ratio entered the panel." 
+# =============================================================================
 """Derive BMI for reference screening and WHtR for biomarker scoring."""
 
 from pathlib import Path

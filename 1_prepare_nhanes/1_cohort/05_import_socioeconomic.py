@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/1_cohort/05_import_socioeconomic.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads race and ethnicity, education and income-to-poverty
+#               ratio from the ten DEMO files, codes unchanged.
+#
+# METHODS       Used for Table 1 and the screen's composition (Results 6).
+# =============================================================================
 """Import minimally interpreted socioeconomic DEMO variables across ten cycles.
 
 Run this file directly.  It reads the same DEMO XPT file per survey cycle that

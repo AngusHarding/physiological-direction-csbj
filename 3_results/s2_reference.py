@@ -1,3 +1,38 @@
+# =============================================================================
+# READ ME FIRST: s2_reference.py  (Results 2)
+# -----------------------------------------------------------------------------
+# RESULTS 2     "With sex-specific references, women had lower mortality scores
+#               than men."
+#
+# WHAT IT DOES  Builds the mortality score q under three references (SS, SC,
+#               PC), compares women and men on q, and re-estimates the female
+#               hazard ratio with q in the model. Tests whether healthy young
+#               women and men differ marker by marker. Table 2 asks whether an
+#               explicit sex term still improves held-out prediction.
+#
+# METHODS       "Young-healthy reference"; "Mortality score"; "Survival models";
+#               "Sex differences"; "Held-out prediction"; "Uncertainty".
+#
+# MAKES         Figure 2a-d; Table 2; Supp. Tables S2.1 (equivalence), S2.2
+#               and Supp. Fig. S2.1 (paired differences between references);
+#               every Results 2 number (numbers.csv).
+#
+# PSEUDOCODE
+#   for each era:
+#     coordinates under SS (primary), SC and PC          (measures.py)
+#     q under each = cross-fitted mortality score        (models.mortality_score)
+#     sex difference in q = OLS(q ~ female + age spline + period)    [Fig. 2c]
+#     female HR with q = Cox(female + q)                             [Fig. 2d]
+#     change = (female log HR with q) - (female log HR, sex only)
+#     paired differences between references: SC-SS, PC-SS, PC-SC [Supp. S2.2]
+#   intervals: 500 participant draws; directions refitted, reference fixed
+#   equivalence: young-healthy women minus men, per marker, two one-sided
+#     t-tests with a 0.20 pooled-SD margin                         [Supp. S2.1]
+#   Table 2 (matched 1999-2010 cohort): for each held-out cycle, re-estimate
+#     the reference without it, learn q with and without a sex term, predict
+#     the held-out cycle; pool; compare C and five-year risk error
+#     (prediction.py)
+# =============================================================================
 """Results 2: sex-specific references let the score register women's lower mortality.
 
 The question
@@ -91,6 +126,12 @@ PREDICTION_SEED = 20261023            # the Table 2 bootstrap's own seed
 # ===========================================================================
 # Part A. The score under three references
 # ===========================================================================
+# -- CALCULATION: coordinates under the three references ---------------------
+# Figure 2 legend: "SS (primary): each sex measured from its own young-healthy
+#   mean and SD. SC: each sex's own mean, with one SD per marker pooled across
+#   the sexes ... PC: mean and SD both pooled across the sexes".
+# SS is the stored primary coordinate set; SC and PC are rebuilt from the
+# transformed values (measures.reference_coordinates).
 def coordinates(c: data.Cohort) -> dict:
     """Marker coordinates under SS, SC and PC. SS is the stored primary coordinate set."""
     values, ref = data.transformed_values(c)
@@ -100,6 +141,15 @@ def coordinates(c: data.Cohort) -> dict:
     return X
 
 
+# -- CALCULATION: q under each reference (cross-fitted) ----------------------
+# Results 2: "We scored each participant with a model fitted without their own
+#   survey cycle (NHANES 1999-2018) or sampling-unit fold (NHANES III)."
+# How: models.mortality_score for SS and SC. PC reuses the SC directions.
+#   Results 2 explains why: "on a common scale, moving women's starting point
+#   adds the same constant to every woman's q score, and the model can absorb
+#   that constant either in q or in the sex coefficient without changing its
+#   predictions. The analyses with sex-specific and with pooled starting points
+#   on a common scale are therefore the same fitted model".
 def scores(era: str, people: pd.DataFrame, X: dict) -> dict:
     """q under each reference.
 
@@ -114,6 +164,17 @@ def scores(era: str, people: pd.DataFrame, X: dict) -> dict:
     return {"SS": q_ss, "SC": q_sc, "PC": q_pc}
 
 
+# -- CALCULATION: sex difference in q and the female hazard ratio ------------
+# Results 2: "Measured from each sex's own young-healthy reference, women's q
+#   scores were 0.64 SD lower than men's in NHANES 1999-2018 ... Adjustment for
+#   the q score moved the female-to-male hazard ratio towards one, from 0.62 to
+#   0.94 (0.81 to 1.05) in NHANES 1999-2018 and from 0.71 to 0.83".
+#   "In paired comparisons, pooling both the starting points and the units
+#   reduced the change in the female log hazard ratio in both eras (-0.35 ...)"
+#   [the PC-SS change].
+# How: contrast = models.sex_contrast on q; log_hr = female coefficient in
+#   Cox(female + q, q standardised to cohort SD); change = log_hr - sex-only
+#   log HR; paired differences are simple subtractions between references.
 def reference_estimates(era: str, people: pd.DataFrame, q: dict) -> dict:
     """For each reference: women minus men in q, and the female log hazard ratio with q.
 
@@ -146,6 +207,10 @@ def _start_reference_worker(era: str) -> None:
     _W.update(era=era, people=c.people, X=coordinates(c), strata=models.bootstrap_strata(era, c.people))
 
 
+# -- UNCERTAINTY: one participant-bootstrap draw for Part A ------------------
+# Supp. Fig. S2.1 legend: "500 participant-bootstrap draws, with directions
+#   refitted and reference estimates fixed". Participants are resampled within
+#   cycle x sex (sex x phase in NHANES III); every q direction is refitted.
 def _reference_draw(draw: int) -> dict:
     era = _W["era"]
     rows = models.bootstrap_rows(era, _W["strata"], draw)
@@ -157,6 +222,12 @@ def _reference_draw(draw: int) -> dict:
 # ===========================================================================
 # Part C. Reference equivalence
 # ===========================================================================
+# -- CALCULATION: do healthy young women and men differ, marker by marker? ---
+# Results 2: "in a test of mean equivalence with a prespecified margin of 0.20
+#   pooled within-sex SD, we established equivalence for only 4 of 38 markers,
+#   17 differed by more than 0.5 SD, and haemoglobin differed by 2.0 SD".
+# How: women minus men in pooled within-sex SD; equivalence by two one-sided
+#   Welch t-tests against +/- 0.20 pooled SD, p < 0.05.
 def reference_equivalence(margin: float = 0.20, alpha: float = 0.05) -> pd.DataFrame:
     """For each marker, healthy young women minus men, in pooled within-sex SDs, and
     whether two one-sided t-tests (Welch) place the difference within +/- margin."""
@@ -181,6 +252,9 @@ def reference_equivalence(margin: float = 0.20, alpha: float = 0.05) -> pd.DataF
 # ===========================================================================
 # Part D. Table 2: held-out prediction with and without a sex term
 # ===========================================================================
+# -- TABLE 2: the matched NHANES 1999-2010 cohort -----------------------------
+# Results 2: "a matched NHANES 1999-2010 cohort (6,759 participants; 2,112
+#   deaths)". The reference members are restricted to the same six cycles.
 def matched_data() -> dict:
     """The matched cohort, its transformed markers, and the reference members of 1999-2010."""
     c = data.load_modern()
@@ -193,6 +267,9 @@ def matched_data() -> dict:
             "ref": ref, "orientation": spec.orientation.to_numpy(), "side": spec.adverse_direction.to_numpy()}
 
 
+# -- UNCERTAINTY: one bootstrap draw for Table 2 -----------------------------
+# Older participants and young-healthy reference members are both resampled
+# within cycle x sex, so the reference is re-estimated in every draw.
 def resample_matched(d: dict, draw: int) -> dict:
     """Bootstrap draw: older participants and reference members both resampled within
     cycle x sex blocks, from one random stream."""
@@ -208,6 +285,19 @@ def resample_matched(d: dict, draw: int) -> dict:
             "values": d["values"].iloc[i].reset_index(drop=True), "ref": d["ref"].iloc[j].reset_index(drop=True)}
 
 
+# -- CALCULATION: Table 2, held-out prediction with and without a sex term ---
+# Results 2: "predicting each survey cycle from the other five, re-estimating
+#   young-healthy references without it and omitting sex both when the weights
+#   were learned and when the q score was evaluated (Table 2). Adding sex to
+#   the sex-specific q score did not detectably improve discrimination (change
+#   in concordance 0.0002; -0.0010 to 0.0021), and without a sex term the q
+#   score over-predicted average five-year risk by similar amounts in women and
+#   men (0.48 and 0.45 percentage points)".
+# How, for each held-out cycle: reference from the other five cycles only
+#   (the line "ref = ... cycle.ne(cycle)"); coordinates and DA under SS, SC and
+#   PC; q weights learned with and without a female term; evaluation model with
+#   and without a female term; held-out linear predictor and five-year risk.
+#   Metrics: prediction.py.
 def prediction_metrics(d: dict) -> dict:
     """All Table 2 models, each predicted cycle by cycle; returns pooled held-out metrics."""
     people, values = d["people"], d["values"]
@@ -231,6 +321,8 @@ def prediction_metrics(d: dict) -> dict:
     return {model: P.evaluate(people, h) for model, h in held.items()}
 
 
+# Table 2 quantities: C without and with sex, the change in C, and five-year
+# risk error (predicted minus observed, percentage points) in women and men.
 def flatten(metrics: dict) -> dict:
     """The Table 2 quantities from one set of metrics."""
     out = {}
@@ -260,6 +352,7 @@ def _prediction_draw(draw: int) -> dict:
     return {"draw": draw, **flatten(prediction_metrics(resample_matched(_D["data"], draw)))}
 
 
+# Formats Table 2; intervals are 2.5th-97.5th percentiles of the 500 draws.
 def table2(point: dict, draws: pd.DataFrame | None) -> pd.DataFrame:
     def interval(key, digits):
         text = f"{point[key]:.{digits}f}"
@@ -284,6 +377,7 @@ def table2(point: dict, draws: pd.DataFrame | None) -> pd.DataFrame:
 # ===========================================================================
 # Figure 2
 # ===========================================================================
+# Draws Figure 2 from this run's numbers (drawing code: render_figures.py).
 def figure2(scatter: dict, est: pd.DataFrame) -> None:
     """Draw this run's scores and intervals using the accepted Figure 2 layout.
 
@@ -339,6 +433,8 @@ def summarise(point: dict, draws: pd.DataFrame | None, era_column: bool = True) 
     return pd.DataFrame(rows)
 
 
+# Collects every Results 2 number quoted in the text into numbers.csv, which
+# check_against_paper.py compares with the manuscript.
 def quoted_numbers(ref_est: pd.DataFrame, equivalence: pd.DataFrame, pred: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for r in ref_est.itertuples():

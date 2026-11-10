@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/1_cohort/04_import_survey_design.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the survey-design variables (strata, sampling units,
+#               weights) from the ten DEMO files.
+#
+# METHODS       Used by the survey-design bootstraps ("Uncertainty":
+#               "primary sampling units within strata"). Point estimates are
+#               unweighted (Methods, "Experimental design").
+# =============================================================================
 """Extract NHANES complex-survey design variables from all ten DEMO files.
 
 The public analysis spans ten equal two-year cycles. WTMEC2YR is therefore

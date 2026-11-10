@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/run_all.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Runs the five NHANES III preparation steps in order.
+#
+# METHODS       None; it calculates nothing itself.
+# =============================================================================
 """Run the five NHANES III preparation steps, in order.
 
     python -B run_all.py

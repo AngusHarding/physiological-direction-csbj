@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/08_calculate_hei_2020.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Computes the Healthy Eating Index 2020 for each participant,
+#               following heiscore 0.1.4.
+#
+# METHODS       Table 4 and Results 6 ("the lowest third of diet quality").
+# =============================================================================
 """Reproduce individual-level simple HEI-2020 scores component by component.
 
 The implementation follows heiscore 0.1.4 exactly, including its two-day-weight

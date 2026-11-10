@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/1_cohort/01_import_demographics.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the demographics file (DEMO) of each of the ten cycles
+#               and stacks sex, age, pregnancy status and cycle into one table.
+#               Decides nothing.
+#
+# METHODS       Data import for "Participants and endpoints".
+# =============================================================================
 """Import minimally interpreted DEMO variables across ten NHANES cycles.
 
 Run this file directly.  It reads one DEMO XPT file per survey cycle, keeps the

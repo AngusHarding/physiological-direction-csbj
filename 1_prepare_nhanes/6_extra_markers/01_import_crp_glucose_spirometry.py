@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/6_extra_markers/01_import_crp_glucose_spirometry.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the measurements outside the panel: C-reactive protein,
+#               fasting glucose and insulin, and spirometry (with its quality
+#               grade).
+#
+# METHODS       Results 7 candidates; CRP also feeds Phenotypic Age (Results 4).
+# =============================================================================
 """Import the three candidate system measurements from raw NHANES files.
 
 METHODS: see SPECIFICATION.md.

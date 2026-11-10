@@ -1,3 +1,24 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/7_marker_panel/01_build_38_marker_panel.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Joins every cleaned laboratory and examination table to the
+#               eligible adults and keeps those with a complete panel: the
+#               29,053-person complete-panel cohort. Derives urine ACR and eGFR.
+#
+# METHODS       "Participants and endpoints": "29,053 had complete data for the
+#               38-marker panel". Supp. Section Zero, "Complete panel":
+#               "Completeness required 44 fields rather than the 38 scored
+#               markers: the other six were serum creatinine, calculated
+#               osmolality, calculated haematocrit, calculated mean corpuscular
+#               haemoglobin, body mass index and red cell count".
+#
+# PSEUDOCODE
+#   start from the eligible adults (1_cohort/03)
+#   left-join each component table by SEQN (never adds or drops anyone)
+#   ACR = 100 x urine albumin / urine creatinine
+#   eGFR = CKD-EPI 2021 race-free creatinine equation (age and sex enter it)
+#   keep rows with all 44 fields present; save the 38 scored markers
+# =============================================================================
 """Assemble and lock the untransformed final 38-biomarker panel.
 
 Beginner's map
@@ -33,6 +54,11 @@ SOURCES = {
 }
 
 
+# -- CALCULATION: eGFR -------------------------------------------------------
+# Supp. Section Zero: "eGFR used calibrated creatinine, age and sex in the
+#   2021 race-free Chronic Kidney Disease Epidemiology Collaboration (CKD-EPI)
+#   creatinine equation [DP-R7] [57]; because age enters the equation, eGFR
+#   carries some age information by construction."
 def egfr_ckdepi_2021(creatinine, age, sex):
     """CKD-EPI 2021 race-free creatinine eGFR; sex is NHANES 1=male, 2=female."""
     creatinine=np.asarray(creatinine,float); female=np.asarray(sex)==2

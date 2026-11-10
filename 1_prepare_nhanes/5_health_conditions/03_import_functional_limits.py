@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/5_health_conditions/03_import_functional_limits.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the three functional-limitation questions (PFQ051,
+#               PFQ054, PFQ057).
+#
+# METHODS       "Young-healthy reference" ("no ... functional limitation").
+# =============================================================================
 """Import the three raw NHANES functional-impairment reference screens."""
 
 from hashlib import sha256

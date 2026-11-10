@@ -1,3 +1,31 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/7_marker_panel/04_build_young_healthy_reference.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Decides who belongs to the young-healthy reference in NHANES
+#               1999-2018 (1,238 participants: 547 men, 691 women). Three
+#               definitions are built; the primary one ("availability_aware",
+#               saved as is_reference) is used by every analysis.
+#
+# METHODS       "Young-healthy reference": "participants aged 18-29 with body
+#               mass index 18.5-24.9 kg/m2 who had never smoked, drank lightly
+#               or not at all, and reported no chronic disease or functional
+#               limitation. The reference comprised 1,238 participants in NHANES
+#               1999-2018 ... Reference membership did not use mortality."
+#               Supp. Section Zero, "Young-healthy references", gives the
+#               exact rules below.
+#
+# PSEUDOCODE   (each criterion is pass / fail / unknown; applied in this order)
+#   age < 30 (the panel starts at 18)
+#   BMI 18.5-24.9
+#   none of 13 chronic diseases (asked-and-answered no; NOT ASKED at 18-19
+#     counts as a pass)
+#   never smoked
+#   at most 7 drinks per week
+#   no functional limitation (PFQ051, PFQ054, PFQ057; NOT ASKED under 20 or in
+#     1999-2002 counts as a pass)
+#   primary rule: every criterion must be "pass"; a missing answer to a
+#     question that was asked fails
+# =============================================================================
 """Independently construct strict and historical-compatible healthy references."""
 
 from pathlib import Path
@@ -22,6 +50,18 @@ def three_state(condition_pass: pd.Series, condition_fail: pd.Series) -> pd.Seri
                                default="unknown"), index=condition_pass.index)
 
 
+# -- CALCULATION: each criterion for each participant ------------------------
+# Supp. Section Zero: "ages 18-29; body mass index 18.5-24.9 kg/m2; never
+#   smoked; no more than seven alcoholic drinks per week; no reported
+#   arthritis, congestive heart failure, coronary heart disease, angina, heart
+#   attack, stroke, emphysema, thyroid disease, chronic bronchitis, liver
+#   condition, cancer, diabetes or kidney failure; and no functional limitation
+#   (PFQ051, PFQ054 and PFQ057). A missing answer to a question that applied
+#   excluded the participant, but questions that were not asked did not: the
+#   chronic-disease questions at ages 18-19, and the functional questions below
+#   age 20 and in 1999-2002. Missing body mass index, smoking or alcohol always
+#   excluded."
+# The "_available_state" columns hold the primary (availability-aware) rule.
 def build_states(master: pd.DataFrame) -> pd.DataFrame:
     states = pd.DataFrame({"SEQN": master.SEQN, "RIAGENDR": master.RIAGENDR,
                            "RIDAGEYR": master.RIDAGEYR})
@@ -62,6 +102,13 @@ def build_states(master: pd.DataFrame) -> pd.DataFrame:
     return states
 
 
+# -- CALCULATION: applying the criteria in order -----------------------------
+# mode "availability_aware" (primary): every criterion must pass, with the
+#   not-asked passes above. "strict": unasked questions also fail (Supp.:
+#   "Requiring every question to be answered would have left 846").
+#   "historical_compatible": missing disease or function answers pass (Supp.:
+#   "the earlier, more permissive rule admitted three more participants
+#   (1,241)"). Only the primary rule is saved as is_reference.
 def cascade(states: pd.DataFrame, reference_column: str, mode: str) -> pd.DataFrame:
     rows = []
     mask = pd.Series(True, index=states.index)

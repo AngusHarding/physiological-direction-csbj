@@ -1,3 +1,26 @@
+# =============================================================================
+# READ ME FIRST: settings.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Holds every fixed choice the analysis depends on (folders, age
+#               floor, accident code, survey cycles, age splines, seeds, draw
+#               counts), and a guard that stops any script writing outside
+#               outputs/. It calculates nothing.
+#
+# METHODS       "Participants and endpoints": the age floor of 52 ("Why 52") and
+#               the accident code behind the principal endpoint.
+#               "Statistical analysis": the age spline used for sex differences
+#               and the 500 bootstrap draws behind Results 1 and 2.
+#
+# USED BY       Every Results script.
+#
+# WHERE TO LOOK
+#   AGE_MIN = 52           Methods, "Mortality cohorts": "participants aged 52-79"
+#   ACCIDENT_CODE = 4      Methods, "Endpoints": "other than an identified accident"
+#   CYCLES                 the ten survey cycles, 1999-2000 to 2017-2018
+#   ERAS[...]["age_spline"] Methods, "Sex differences": "an age spline"
+#   ERAS[...]["period"]    "survey cycle or phase"
+#   BOOTSTRAP_DRAWS = 500  the participant bootstrap of Results 1 and 2
+# =============================================================================
 """Settings shared by every script: where the data are, and the fixed choices of the analysis.
 
 Read this file first. Every folder and every constant the pipeline uses is

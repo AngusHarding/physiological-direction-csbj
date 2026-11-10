@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/07_import_hei_package_data.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Extracts the dietary food-pattern tables from the archived
+#               heiscore R package.
+#
+# METHODS       Data import for Table 4 ("diet quality (2005-2014)").
+# =============================================================================
 """Extract immutable FPED-derived tables from the frozen CRAN data package.
 
 This is a package-replication boundary, not yet an official-USDA reconstruction.

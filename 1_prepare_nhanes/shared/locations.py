@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/shared/locations.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Names the input and output folders once and switches on the
+#               write guard (scripts may write only to outputs/).
+#
+# METHODS       None; settings only.
+# =============================================================================
 """Where the preparation scripts find their inputs and put their outputs.
 
 Every script in 1_prepare_nhanes/ imports this file first. It does two jobs.

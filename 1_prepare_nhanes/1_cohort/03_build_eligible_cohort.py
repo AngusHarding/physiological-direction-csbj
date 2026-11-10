@@ -1,3 +1,28 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/1_cohort/03_build_eligible_cohort.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Decides who is eligible in NHANES 1999-2018 (34,785 adults) and
+#               records, for every participant, which rule they passed or
+#               failed. No outcome is used.
+#
+# METHODS       "Participants and endpoints": "Adults aged 18-79 who were not
+#               pregnant and reported no recent acute illness were eligible
+#               (34,785)". Supp. Section Zero, "Eligibility in NHANES
+#               1999-2018": "Adults aged 18-79 were eligible if sex and age
+#               were recorded, they answered all three recent-illness questions
+#               (HSQ500, HSQ510 and HSQ520) and reported no recent illness, and
+#               they were not recorded as pregnant. Missing pregnancy status
+#               among participants who were not asked was not treated as
+#               pregnancy, whereas a missing illness response failed the rule."
+#
+# PSEUDOCODE
+#   eligible = sex and age recorded
+#              AND matched to the illness questionnaire
+#              AND all three illness questions answered
+#              AND age 18-79
+#              AND all three answered "no" (code 2)
+#              AND pregnancy status is not "yes" (code 1)
+# =============================================================================
 """Build explicit eligibility flags and reproduce the certified adult cohort.
 
 This is the heart of Chunk 1.  It does not merely save the participants who
@@ -48,6 +73,11 @@ def primary_exclusion_reason(frame: pd.DataFrame) -> pd.Series:
     return pd.Series(np.select(conditions, labels, default="eligible"), index=frame.index)
 
 
+# -- CALCULATION: the eligibility rules --------------------------------------
+# Each rule is its own True/False column (eligible_...), so any exclusion can
+# be traced. The age rule is RIDAGEYR >= 18 and < 80; "no recent illness" is
+# all three HSQ answers equal to 2; "not pregnant" is RIDEXPRG not equal to 1,
+# so a participant not asked about pregnancy is not counted as pregnant.
 def main() -> None:
     # Load the two minimally interpreted tables produced by the import scripts.
     demo = pd.read_csv(IMPORTED / "demographics.csv")

@@ -1,3 +1,43 @@
+# =============================================================================
+# READ ME FIRST: s6_screen.py  (Results 6)
+# -----------------------------------------------------------------------------
+# RESULTS 6     "A within-sex screen selected distant, low-risk women and men."
+#
+# WHAT IT DOES  Builds the screen: within each sex, candidates (G2) are at or
+#               above the 60th percentile of distance and at or below the 60th
+#               percentile of the mortality score q. Every learned stage is
+#               fitted outside the evaluated fold of sampling units. Reports
+#               five-year mortality by group and sex, who is selected, the
+#               pooled-sex comparison, and the 24-input sensitivity.
+#
+# METHODS       "Endpoints" ("The screen in Section 6 used only 1999-2014 ...
+#               and was evaluated with five-year all-cause mortality"; the
+#               24-input sensitivity); "Distances" (bounded distance DB);
+#               "Mortality score" (q and residual distance R); "Screening
+#               risks"; "Uncertainty".
+#
+# MAKES         Figure 6; Table 4; Supp. Tables S6.3-S6.7, S6.10-S6.11; every
+#               Results 6 number.
+#
+# PSEUDOCODE
+#   cohort: ages 52-79 with the 32 common markers; NHANES 1999-2014 (9,362)
+#     and NHANES III (4,440); five folds of whole sampling units
+#   for each fold (learned on the other four folds only):
+#     young-healthy mean, SD and median by sex, without the held-out units
+#     direction u = Cox(female + 32 coordinates) on training rows, trained on
+#       the PRINCIPAL ENDPOINT (accident-censored)
+#     q = z . u;  R = sqrt(DE^2 - q^2)
+#     DB = mean over markers of min(adverse raw excursion beyond the same-sex
+#          reference median / same-sex training 99th percentile, 1)
+#     cut-offs within each sex = training 60th percentiles of q, R and DB
+#     held-out fold: low = q <= q cut; high = distance >= distance cut
+#       G1 = low & not high; G2 = low & high (candidates); G3 = high & not low;
+#       G4 = neither
+#   evaluation: FIVE-YEAR ALL-CAUSE death (Kaplan-Meier) by group and sex;
+#     "balanced" = plain average of the male and female values
+#   intervals: 1,000 Rao-Wu survey-bootstrap draws per era, every learned
+#     stage refitted in each draw
+# =============================================================================
 """Results 6: a within-sex screen selected distant, low-risk women and men.
 
 The question
@@ -105,6 +145,11 @@ NOT_ON_CMP_CBC = ("hdl_cholesterol", "hba1c", "ACR", "phosphorus", "uric_acid", 
 # ===========================================================================
 # Data
 # ===========================================================================
+# -- DESIGN: five folds of whole sampling units ------------------------------
+# Results 6: "fitted every learned stage (references, mortality direction, caps
+#   and thresholds) outside the evaluated fold of sampling units". Units are
+#   assigned to balance the numbers of men and women across folds; outcomes are
+#   not used.
 def assign_folds(older: pd.DataFrame) -> dict:
     """Whole sampling units into five folds, balancing the number of men and of women.
 
@@ -126,6 +171,13 @@ def assign_folds(older: pd.DataFrame) -> dict:
     return fold_of
 
 
+# -- COHORT AND ENDPOINTS ----------------------------------------------------
+# Results 6: "NHANES 1999-2014 (9,362 participants; 631 deaths within five
+#   years) and NHANES III (4,440; 445)". Methods, "Endpoints": "The screen in
+#   Section 6 used only 1999-2014, where accidents are identifiable, and was
+#   evaluated with five-year all-cause mortality."
+# Two endpoints, on purpose: "event" (principal endpoint, accident-censored)
+#   trains the direction; "months" and "died" (all-cause) evaluate the groups.
 def load_era(era: str) -> dict:
     frame = data.load_common32(era)
     markers = data.common32_markers()
@@ -167,6 +219,24 @@ def weighted_mean_sd(X, w):
     return mu, np.sqrt((w[:, None] * (X - mu) ** 2).sum(axis=0) / (n - 1))
 
 
+# -- CALCULATION: the screen, learned fold by fold ---------------------------
+# Results 6: "Within each sex, participants at or above the 60th percentile of
+#   distance and at or below the 60th percentile of the mortality score formed
+#   the candidate group (G2). The other combinations defined G1 (lower
+#   distance, lower q score), G3 (higher distance, higher q score) and G4
+#   (lower distance, higher q score)". "In the specified primary screen, we
+#   measured distance as residual distance R, the part of Euclidean distance
+#   not captured by the q score."
+# Methods, "Distances": bounded distance "averages raw-scale adverse
+#   excursions beyond the young-healthy median, each divided by its same-sex
+#   99th percentile among older training participants and capped at 1".
+# Methods, "Mortality score": "DE^2 = q^2 + R^2", so R = sqrt(DE^2 - q^2).
+# How, for each fold: reference members exclude the held-out sampling units;
+#   u is fitted on training rows; caps and cut-offs are weighted percentiles of
+#   training rows of the same sex; groups are assigned to the held-out fold.
+#   "pooled" applies one pair of cut-offs to both sexes together (Results 6:
+#   "Applied to both sexes together, the same rule selected predominantly
+#   women, 74% and 65% in the R screen").
 def crossfit(d: dict, frame_weights: np.ndarray, markers: list | None = None) -> dict:
     """Out-of-fold q, R and D_B for every eligible participant, and the two screens' groups.
 
@@ -240,6 +310,17 @@ def crossfit(d: dict, frame_weights: np.ndarray, markers: list | None = None) ->
     return {"scores": out, "groups": groups, "pooled_candidates": pooled_high & pooled_low}
 
 
+# -- CALCULATION: five-year mortality by group and sex -----------------------
+# Results 6: "Five-year mortality, averaged over the sexes, was 3.11% among
+#   bounded-distance candidates in NHANES 1999-2014 ... against 6.69% ... among
+#   all eligible participants, and about 3 percentage points below the risk
+#   expected for the candidates' age". Figure 6 legend: "Equal-sex risks
+#   average the two sex-specific estimates and do not describe an actual
+#   recruited group."
+# How: Kaplan-Meier five-year all-cause risk within each group and sex; age-
+#   expected risk = the group's age-band mix x each band's risk among all
+#   eligible people of that sex; "balanced" = (men + women) / 2; paired
+#   differences (e.g. G2 - G3) are simple subtractions within the same draw.
 def evaluate(d: dict, groups: dict, frame_weights: np.ndarray) -> dict:
     """Five-year risk, age-expected risk and selection fraction by group and sex; sex averages."""
     W = frame_weights[d["position"]]
@@ -268,6 +349,13 @@ def evaluate(d: dict, groups: dict, frame_weights: np.ndarray) -> dict:
     return m
 
 
+# -- CALCULATION: every Results 6 quantity for one set of weights ------------
+# The same function gives the point estimates (all weights 1) and every
+# bootstrap draw. In NHANES 1999-2014 it also reruns the screen on the 24
+# inputs (Methods, "Endpoints": "the modern screen was repeated with the 24
+# existing inputs ... with reference parameters, mortality coefficients, caps
+# and thresholds re-estimated within training data"); Results 6: "3.22% ...
+# against 3.11% with the 32-marker rule; the paired difference was 0.11".
 def screen_metrics(d: dict, frame_weights: np.ndarray) -> tuple[dict, dict]:
     """Every drawn Results 6 quantity for one set of weights, and the 32-marker screen itself.
 
@@ -369,6 +457,11 @@ def profile_data(d: dict, groups: dict, scores: dict) -> pd.DataFrame:
     return p
 
 
+# -- TABLE 4: profiles of the screening groups -------------------------------
+# Table 4 legend: "Disease and lifestyle percentages are directly
+#   age-standardised within sex using available responses; missing or unasked
+#   responses are not counted as absent." Results 6: "candidates more often
+#   reported hypertension (men 55% vs 41%; women 67% vs 44%)".
 def table4(p: pd.DataFrame) -> pd.DataFrame:
     """Age-standardised percentages within sex: each age band's share of all eligible participants
     of that sex is the standard; percentages use those who answered.
@@ -523,6 +616,12 @@ def figure6(groups: pd.DataFrame, metrics: pd.DataFrame, intervals: pd.DataFrame
     V.save_figure(fig, OUT, "figure6")
 
 
+# -- UNCERTAINTY: one Rao-Wu survey-bootstrap draw ---------------------------
+# Figure 6 legend: "95% percentile intervals from 1,000 original bootstrap
+#   draws per era, resampling sampling units within strata and covering the
+#   learned references, mortality directions, caps and thresholds."
+# How: in each stratum with n units, draw n - 1 with replacement; weight =
+#   n / (n - 1) x times drawn.
 def replicate_weights(frame: pd.DataFrame, era_index: int, draw: int) -> np.ndarray:
     """One survey-bootstrap draw (Rao-Wu): n - 1 of each stratum's n units drawn with replacement.
 
@@ -567,6 +666,12 @@ def race(d: dict) -> pd.Series:
     return r.loc[d["older"].SEQN].astype(int).map(labels).reset_index(drop=True)
 
 
+# -- CALCULATION: who is selected --------------------------------------------
+# Results 6: "Thresholds applied within each sex selected women and men in
+#   nearly equal numbers"; "non-Hispanic Black and Mexican American
+#   participants were over-represented among candidates (24.0% and 17.2%,
+#   against 19.9% and 15.6%)"; selection fractions by age band "17.3%, 17.1% and
+#   13.5%" (Supp. Tables S6.6, S6.7, S6.10). Descriptive counts only.
 def composition(d: dict, screen: dict) -> dict:
     """Who is selected: the share of women under each policy; race shares; selection by age and race."""
     sex, m = d["sex"], {}

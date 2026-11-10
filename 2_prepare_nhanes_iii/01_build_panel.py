@@ -1,3 +1,24 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/01_build_panel.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the NHANES III laboratory and examination files, clears
+#               fill codes, sets impossible values to missing, derives ACR,
+#               eGFR and waist-to-height ratio, and keeps adults aged 18-79
+#               with all 34 markers (13,195). No mortality variable is read.
+#
+# METHODS       "Panel and transformations": "NHANES III provided 34".
+#               Supp. Section Zero, "Assay calibration": creatinine calibrated
+#               "using ... 0.960x - 0.184 for NHANES III" before eGFR; "NHANES
+#               III. The 34-marker panel comprised 13,195 adults aged 18-79 with
+#               complete markers".
+#
+# PSEUDOCODE
+#   read lab + exam fixed-width files (positions from the published layouts)
+#   fill codes (8s and 9s) -> missing; implausible values -> missing
+#   creatinine_std = 0.960 x creatinine - 0.184
+#   eGFR = CKD-EPI 2021 (creatinine_std, age, sex);  ACR; WHtR = waist/height
+#   keep ages 18-79 with all 34 markers present
+# =============================================================================
 """Parse, harmonise, derive and QC the NHANES III biomarker panel.
 
 SPECIFICATION: SPECIFICATION.md sections 4, 6 and 6a (Decisions 1, 6, 7).
@@ -26,6 +47,8 @@ OUT = OUTPUTS  # public_code
 AGE_MIN, AGE_MAX = 18, 79
 
 
+# -- CALCULATION: creatinine calibration (Supp. Section Zero, "Assay
+# calibration"; reference DP-R4) -------------------------------------------
 def selvin_standardise_creatinine(scr: pd.Series) -> pd.Series:
     """Calibrate NHANES III creatinine to an IDMS-traceable scale.
 
@@ -36,17 +59,18 @@ def selvin_standardise_creatinine(scr: pd.Series) -> pd.Series:
 
     standardised = 0.960 * NHANES_III - 0.184
 
-    CITATION MUST BE VERIFIED before write-up (Selvin et al., calibration of
-    NHANES III serum creatinine). Recorded here from working knowledge; the
-    coefficients should not be trusted without checking the source. An
-    uncalibrated eGFR is retained alongside as a sensitivity.
+    Source: Centers for Disease Control and Prevention, Prevalence of Chronic
+    Kidney Disease and Associated Risk Factors, United States, 1999-2004. MMWR
+    2007;56:161-165, footnote to the stage-specific estimates (the paper's
+    reference DP-R4). An uncalibrated eGFR is retained alongside as a sensitivity.
     """
     return 0.960 * scr - 0.184
 
 
+# -- CALCULATION: eGFR, the same equation as NHANES 1999-2018 ----------------
 def egfr_ckdepi_2021(creatinine, age, sex):
     """Race-free CKD-EPI 2021. Identical to the main pipeline's implementation
-    (data_preparation/src/03_derive/derive_kidney_features.py). NHANES sex codes
+    (1_prepare_nhanes/7_marker_panel/01_build_38_marker_panel.py). NHANES sex codes
     1 = male, 2 = female."""
     creatinine = np.asarray(creatinine, dtype=float)
     female = np.asarray(sex) == 2

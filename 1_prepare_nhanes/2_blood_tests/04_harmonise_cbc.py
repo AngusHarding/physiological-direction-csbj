@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/04_harmonise_cbc.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Applies the blood-count error screens (differential
+#               percentages outside 0-100; platelet, MCV and RDW bounds) and sets
+#               failing values to missing.
+#
+# METHODS       Supp. Section Zero, "Cleaning" (Table S0.3).
+# =============================================================================
 """Apply the frozen error screens and complete-case rule to measured CBC data."""
 
 from pathlib import Path

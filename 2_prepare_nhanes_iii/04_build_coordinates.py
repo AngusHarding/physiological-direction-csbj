@@ -1,3 +1,27 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/04_build_coordinates.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Applies NHANES III's transformations and builds both
+#               coordinate sets from the same-sex NHANES III reference: z (mean
+#               and SD) for DM, DE and q, and adverse excursions (median and
+#               IQR/1.349) for DA. No mortality variable is read.
+#
+# METHODS       "Young-healthy reference"; "Distances" (DA); Supp. Section Zero,
+#               "Reference coordinates", including "Correction to the NHANES III
+#               orientation": "The revision keeps -1/x and sets oj = +1, which
+#               gives the same r as 1/x with oj = -1. The z coordinates, and
+#               hence DM, DE and q, were unaffected".
+#
+# NAMES         "HD" = z coordinates; "FI" = adverse-excursion coordinates.
+#
+# PSEUDOCODE
+#   transform each marker (NHANES III recipe; reciprocal written as -1/x)
+#   for each sex: mean, SD, median, IQR of the reference members
+#   z = (T - mean) / SD
+#   r = orientation x (T - median) / (IQR / 1.349), orientation = +1 for all
+#   adverse excursion = adverse side of r (directions imported unchanged from
+#     NHANES 1999-2018); signed as in 1_prepare_nhanes/8_adverse_distance
+# =============================================================================
 """Transform, standardise, and build HD and FI coordinates for NHANES III.
 
 SPECIFICATION: SPECIFICATION.md sections 6, 6a and 6b (Decisions 7, 8, 9).
@@ -49,6 +73,10 @@ def transform(x: np.ndarray, kind: str) -> np.ndarray:
     raise ValueError(kind)
 
 
+# -- CALCULATION: orientation (the corrected NHANES III rule) -----------------
+# Every transformation here rises with the raw value (the reciprocal is -1/x),
+# so the orientation is +1 for every marker. See the Supp. Section Zero
+# correction quoted above.
 def orientation_for(kind: str) -> int:
     """+1 unless the transformation reverses the raw-value axis.
 

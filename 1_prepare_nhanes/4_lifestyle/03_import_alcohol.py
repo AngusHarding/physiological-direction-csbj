@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/03_import_alcohol.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the alcohol questions.
+#
+# METHODS       Data import for the reference and Table 1.
+# =============================================================================
 """Import alcohol questionnaire variables without deriving consumption."""
 
 from pathlib import Path

@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/shared/nhanes_reader.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads NHANES .XPT files and restores the zeros that the SAS
+#               transport format stores as tiny numbers.
+#
+# METHODS       Supp. Section Zero, "Missing-value codes".
+# =============================================================================
 """Shared, minimally interpretive NHANES XPT reader for data preparation.
 
 Beginner's map

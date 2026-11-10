@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/02_harmonise_smoking.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Classifies Never / Former / Current smoking. SMQ040 is asked
+#               only of people with 100+ lifetime cigarettes, so its absence is
+#               correct for never-smokers.
+#
+# METHODS       "Young-healthy reference" ("had never smoked"); Table 1;
+#               Results 7 baseline.
+# =============================================================================
 """Derive mutually exclusive Never, Former, and Current smoking status.
 
 NHANES asks SMQ040 only of participants who report at least 100 lifetime

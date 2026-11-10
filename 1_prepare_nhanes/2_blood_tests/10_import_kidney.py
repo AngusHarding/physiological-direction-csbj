@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/10_import_kidney.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads urine albumin and creatinine, and the kidney-failure
+#               question used to screen the reference.
+#
+# METHODS       Data import for Supp. Section Zero, "Renal, body-size and lipid measures".
+# =============================================================================
 """Import urine kidney measurements and the separate kidney-failure flag."""
 
 from pathlib import Path

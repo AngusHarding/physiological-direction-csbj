@@ -1,3 +1,34 @@
+# =============================================================================
+# READ ME FIRST: s5_transport.py  (Results 5)
+# -----------------------------------------------------------------------------
+# RESULTS 5     "A frozen q score ranked deaths across survey eras."
+#
+# WHAT IT DOES  Learns the whole 32-marker scoring pipeline in one survey era,
+#               freezes it, and applies it unchanged in the other era, where
+#               only the score's association with death is estimated. Done in
+#               both directions (forward: 1999-2018 -> III; reverse: III ->
+#               1999-2018).
+#
+# METHODS       Supplementary Section Five, "Evaluation"; "Held-out
+#               prediction" (concordance); "Uncertainty" (survey bootstrap).
+#
+# MAKES         Figure 5b,c numbers; Supp. Tables S5.2-S5.4; random
+#               directions (Supp. Fig. S5.1); every Results 5 number.
+#
+# PSEUDOCODE
+#   for each direction (source -> target):
+#     SOURCE ONLY: transformation recipe (stored, per era);
+#       young-healthy mean and SD by sex from source reference members;
+#       direction u from Cox(female + 32 coordinates), strata = cycle or phase;
+#       scale = SD of q in the source cohort
+#     TARGET: coordinates from the SOURCE reference; q = (z . u) / source SD
+#       association: Cox(female + q) -> log HR per source SD
+#       ranking: concordance within sex and survey period
+#     comparisons: target's own reference; a q trained and cross-fitted in the
+#       target; 1,000 random directions oriented and scaled in the source;
+#       post hoc: omit influential cases; a joint transformation recipe
+#   intervals: 2,000 Rao-Wu survey-bootstrap draws in each era
+# =============================================================================
 """Results 5: a frozen score ranked deaths across survey eras.
 
 The question
@@ -94,6 +125,12 @@ DRAWS = 2000
 # ===========================================================================
 # Data
 # ===========================================================================
+# -- COHORTS: both eras on the 32 common markers -----------------------------
+# Results 5: "NHANES 1999-2018 to NHANES III (forward; 4,439 target
+#   participants, 3,374 deaths) and NHANES III to NHANES 1999-2018 (reverse;
+#   11,497 participants, 2,494 deaths)". The NHANES III cohort is smaller than
+#   in Results 1-4 (4,474) because it needs the 32 common markers rather than
+#   NHANES III's own 34.
 def load() -> dict:
     """Both eras: the full panel (for references and survey weights) and the analysed rows."""
     keys = data.common32_markers().key.tolist()
@@ -126,6 +163,10 @@ def transformed(d: dict, recipe: str) -> np.ndarray:
     return np.column_stack([data.transform(d["values"][:, j], k) for j, k in enumerate(kinds)])
 
 
+# -- CALCULATION: coordinates from a reference -------------------------------
+# (transformed value - reference mean) / reference SD, separately by sex: the
+# same rule as the SS reference in Results 1-2. With survey-bootstrap weights,
+# the mean and SD are weighted.
 def scored(T_rows, sex_rows, T_ref, sex_ref, weights=None) -> np.ndarray:
     """(transformed value - reference mean) / reference SD, by sex. Weighted in bootstrap draws."""
     w = np.ones(len(T_ref)) if weights is None else weights
@@ -140,6 +181,8 @@ def scored(T_rows, sex_rows, T_ref, sex_ref, weights=None) -> np.ndarray:
     return out
 
 
+# Cox model on attained age with entry, Efron ties and period strata (cycle in
+# NHANES 1999-2018, phase in NHANES III, as Supp. Section Five states).
 def cox_fit(people: pd.DataFrame, X: np.ndarray, weights=None, rows=None) -> np.ndarray:
     """Cox coefficients (attained age, Efron ties, survey-period strata), optionally weighted."""
     keep = np.ones(len(people), bool) if rows is None else rows
@@ -154,6 +197,12 @@ def cox_fit(people: pd.DataFrame, X: np.ndarray, weights=None, rows=None) -> np.
     return beta
 
 
+# -- CALCULATION: the target association -------------------------------------
+# Results 5: "In the target we estimated only the q score's association with
+#   mortality." "The hazard ratio per source SD was 1.25 forward ... and 1.76 in
+#   reverse" [logHR, female in the model]. "Concordance, comparing participants
+#   of the same sex and survey period, was 0.630 forward ... and 0.659 in
+#   reverse" [C, models.concordance_within].
 def evaluate(people: pd.DataFrame, score: np.ndarray, weights=None) -> dict:
     """Target association: log HR per source-score SD (with female in the model) and concordance."""
     beta = cox_fit(people, np.column_stack([people.female, score]), weights)
@@ -165,6 +214,14 @@ def evaluate(people: pd.DataFrame, score: np.ndarray, weights=None) -> dict:
 # ===========================================================================
 # One frozen-transport test
 # ===========================================================================
+# -- CALCULATION: everything learned in the source era -----------------------
+# Results 5: "we fitted the complete scoring pipeline in one era: each marker's
+#   transformation, the sex-specific young-healthy means and SDs, the Cox
+#   mortality direction and the q score's scale. We then froze it and applied it
+#   unchanged in the other era."
+# How: reference mean and SD from source reference members; u = female-
+#   adjusted Cox marker coefficients / their length (female left out of q);
+#   sd = SD of q in the source cohort. No target data enter.
 def learn_source(src: dict, T_src: np.ndarray, weights=None):
     """Steps 2-4 in the source: reference, direction, scale. Returns (coordinate scorer, u, sd)."""
     w_ref = None if weights is None else weights[src["reference"]]
@@ -182,6 +239,10 @@ def learn_source(src: dict, T_src: np.ndarray, weights=None):
     return Zs, u, sd
 
 
+# Target participants scored against the SOURCE reference (primary), or against
+# the target's own reference (own=True): Results 5, "Ranking was similar when
+# the target's own young-healthy reference replaced the source's (0.631 and
+# 0.658)".
 def target_coordinates(src, tgt, T_src, T_tgt, own=False, weights_src=None, weights_tgt=None):
     """Target coordinates with the source's reference (or, with own=True, the target's)."""
     ref, T_ref, w = (tgt, T_tgt, weights_tgt) if own else (src, T_src, weights_src)
@@ -189,6 +250,10 @@ def target_coordinates(src, tgt, T_src, T_tgt, own=False, weights_src=None, weig
                   ref["sex"][ref["reference"]], None if w is None else w[ref["reference"]])
 
 
+# -- COMPARATOR: a q score trained within the target -------------------------
+# Results 5: "against 0.642 and 0.666 for q scores trained and cross-fitted
+#   within each target era". Leave one cycle out in NHANES 1999-2018; ten folds
+#   of sampling units in NHANES III.
 def cross_fitted(tgt: dict, Z: np.ndarray) -> np.ndarray:
     """A score trained within the target: leave one cycle out (1999-2018) or ten sampling-unit folds (NHANES III)."""
     p = tgt["people"]
@@ -205,6 +270,15 @@ def cross_fitted(tgt: dict, Z: np.ndarray) -> np.ndarray:
     return q / q.std(ddof=1)
 
 
+# -- CALCULATION: point estimates for one direction --------------------------
+# Frozen score, own-reference score, target-trained score, and two post hoc
+# checks: Results 5, "omitting them raised the hazard ratio to 1.45" (the three
+# participants with ALT recorded at 1 U/L) and "A post hoc transformation
+# recipe informed by both eras' marker distributions, without outcomes, gave
+# 1.56". Random directions: "None of 1,000 random scoring directions, oriented
+# and scaled using the source only, ranked deaths as well as the learned q
+# score"; "Forward, 50 of the 1,000 random directions had a larger log hazard
+# ratio". Each random direction's sign is set by its source Cox fit.
 def point(d: dict, test: str, index: int) -> tuple[list, pd.DataFrame, np.ndarray]:
     """Point estimates for one test; also returns the target-trained score, held fixed in the draws."""
     s, t = TESTS[test]
@@ -270,6 +344,13 @@ def _start(trained: dict) -> None:
     _W.update(d=d, weights=weights, trained=trained)
 
 
+# -- UNCERTAINTY: one survey-bootstrap draw ----------------------------------
+# Results 5: "The intervals came from 2,000 survey-design bootstrap draws that
+#   also refitted the source era's reference means and SDs, mortality direction
+#   and score scale, with transformations held fixed." The target association
+#   is re-estimated with the target's draw weights. The target-trained score is
+#   held at its point value ("conditional"; Figure 5 legend: "for the
+#   target-trained q score they hold its scoring fixed").
 def one_draw(draw: int) -> dict:
     """One survey-bootstrap draw (0-based, as the archive numbers them).
 

@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/3_body_and_bp/01_import_anthropometry.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads measured weight, height and waist circumference.
+#
+# METHODS       Data import for Supp. Section Zero, "Renal, body-size and lipid measures".
+# =============================================================================
 """Import measured weight, height and waist circumference without derivation."""
 
 from pathlib import Path

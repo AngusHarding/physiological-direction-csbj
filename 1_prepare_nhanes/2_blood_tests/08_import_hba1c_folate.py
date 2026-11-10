@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/08_import_hba1c_folate.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads HbA1c and the red cell and serum folate inputs.
+#
+# METHODS       Data import for Supp. Section Zero, "Assay calibration" and "Red cell folate".
+# =============================================================================
 """Import HbA1c and all raw inputs required for RBC-folate harmonisation."""
 
 from pathlib import Path

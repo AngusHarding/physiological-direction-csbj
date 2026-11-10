@@ -1,3 +1,19 @@
+# =============================================================================
+# READ ME FIRST: check_against_paper.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Compares every number the pipeline made with the reviewed
+#               analysis (to 1e-8) and with the printed manuscript (as rounded
+#               in the paper), Tables 1, 2 and 4 cell by cell, and a few
+#               bootstrap draws per section with the archived draws. Prints
+#               PASS or FAIL for each Results section.
+#
+# SCOPE         The expected values are in expected/expected_values.csv (454
+#               numbers). Robustness checks quoted in the Results from
+#               Supplementary Tables S1.4-S1.6, S2.3 and S4.5-S4.6 come from the
+#               archived analysis and are not in that list.
+#
+# METHODS       None. A check, not an analysis; it estimates nothing.
+# =============================================================================
 """Check every number the pipeline made against the reviewed analysis and the paper.
 
 This script estimates nothing and writes nothing except a cache of file

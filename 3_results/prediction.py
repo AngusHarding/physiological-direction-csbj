@@ -1,3 +1,29 @@
+# =============================================================================
+# READ ME FIRST: prediction.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Held-out prediction in the matched NHANES 1999-2010 cohort:
+#               learn a score on five survey cycles, predict the sixth, repeat
+#               for all six, and pool the held-out predictions. Reports
+#               concordance (C), log likelihood and five-year risk error.
+#
+# METHODS       "Statistical analysis": "Held-out prediction" ("evaluated by the
+#               evaluation-set Cox log partial likelihood at training
+#               coefficients ... and by risk-set concordance [51]. Both assess
+#               relative-hazard prediction, not calibrated absolute risk.")
+#
+# USED BY       Results 2, Table 2 (s2_reference.py): is a sex term still needed?
+#               Results 4, the matched Phenotypic Age comparison (s4_panel.py).
+#
+# PSEUDOCODE
+#   for each held-out cycle (six cycles, 1999-2010):
+#     train = the other five cycles
+#     q weights = Cox(markers [+ female]) on train, rescaled to length one
+#     evaluation model = Cox(age [+ female] + q) on train
+#     held-out linear predictor and five-year risk for the held-out cycle
+#   pool the six held-out cycles; then, for all, men and women:
+#     C          = share of comparable pairs (same cycle) ranked correctly
+#     risk error = mean predicted five-year risk - Kaplan-Meier observed risk
+# =============================================================================
 """Held-out prediction: does a score predict death in survey cycles it never saw?
 
 Used for Table 2 (does an explicit sex term improve prediction?) and the
@@ -51,6 +77,10 @@ def fit(risk: models.RiskSets, X: np.ndarray) -> np.ndarray:
     return beta
 
 
+# -- CALCULATION: the q weights, learned on training cycles only -------------
+# Results 2: "omitting sex both when the weights were learned and when the
+#   q score was evaluated (Table 2)". with_sex = False drops the female column
+#   from this fit; with_sex = True fits it but leaves it out of the score.
 def learn_weights(people, X, train, risk, with_sex: bool) -> np.ndarray:
     """The mortality score q learned on training rows: unit-length marker weights.
 
@@ -63,6 +93,14 @@ def learn_weights(people, X, train, risk, with_sex: bool) -> np.ndarray:
     return X @ (weights / np.linalg.norm(weights))
 
 
+# -- CALCULATION: the evaluation model ---------------------------------------
+# Cox model of the endpoint on age (+ female when with_sex) + the score, fitted
+# on training rows; returns the linear predictor for every row. Table 2's
+# "C, no sex term" and "C, with sex term" columns compare with_sex False/True.
+# This model includes examination age as a covariate as well as the
+# attained-age time scale. Table 2 legend: "Evaluation models were Cox models on
+# attained age, stratified by survey cycle, containing examination age, the
+# score and, where stated, a sex term."
 def evaluation_model(people, score, train, risk, with_sex: bool) -> np.ndarray:
     """Linear predictor from a Cox model on age (+ sex) (+ the score, in training-SD units)."""
     terms = ([people.female.to_numpy()] if with_sex else []) + [people.RIDAGEYR.to_numpy()]
@@ -96,6 +134,11 @@ def baseline_hazards(people: pd.DataFrame, eta: np.ndarray):
     return out
 
 
+# -- CALCULATION: predicted five-year risk -----------------------------------
+# Each training cycle gives a baseline survival curve; predicted risk = 1 -
+# average five-year survival from the participant's examination age. Results 2:
+# "without a sex term the q score over-predicted average five-year risk by
+# similar amounts in women and men (0.48 and 0.45 percentage points)".
 def five_year_risk(train_people, train_eta, test_people, test_eta) -> np.ndarray:
     """Probability of an endpoint death within five years of examination.
 
@@ -114,6 +157,11 @@ def five_year_risk(train_people, train_eta, test_people, test_eta) -> np.ndarray
     return 1 - np.mean(survival, axis=0)
 
 
+# -- CALCULATION: concordance (C) --------------------------------------------
+# Methods, "Held-out prediction": "risk-set concordance [51]". For each death
+# at age t, every same-cycle participant still at risk at t is a comparator;
+# the pair is concordant if the person who died had the higher predicted risk
+# (ties count one half). Results 2: "change in concordance 0.0002".
 def concordance_counts(people: pd.DataFrame, eta: np.ndarray) -> tuple[float, float]:
     """(concordant pairs, comparable pairs); ties in predicted risk count one half."""
     a, t = people.entry_age.to_numpy(), people.exit_age.to_numpy()
@@ -124,6 +172,9 @@ def concordance_counts(people: pd.DataFrame, eta: np.ndarray) -> tuple[float, fl
     return float((comparable & (gap > 0)).sum() + .5 * (comparable & (gap == 0)).sum()), float(comparable.sum())
 
 
+# -- CALCULATION: held-out log likelihood ------------------------------------
+# Methods, "Held-out prediction": "evaluation-set Cox log partial likelihood at
+# training coefficients". The predictor is fixed; nothing is fitted here.
 def log_likelihood(people: pd.DataFrame, eta: np.ndarray) -> float:
     """Cox partial log-likelihood of a fixed predictor (Efron ties, cycle strata)."""
     with warnings.catch_warnings():
@@ -144,6 +195,11 @@ def kaplan_meier_risk(years: np.ndarray, event: np.ndarray, horizon: float = 5) 
 GROUPS = {"all": None, "men": 0, "women": 1}
 
 
+# -- CALCULATION: pooling the six held-out cycles ----------------------------
+# Sums concordant and comparable pairs, log likelihoods and predicted risks
+# over the six held-out cycles, for all participants, men and women.
+# risk_error = mean predicted risk - observed Kaplan-Meier risk (Table 2's
+# "Five-year prediction error" columns, in percentage points after x 100).
 def evaluate(people: pd.DataFrame, held_out: dict) -> dict:
     """Pool one model's held-out predictions over the six folds.
 

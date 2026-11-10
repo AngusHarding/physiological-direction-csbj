@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/3_body_and_bp/02_harmonise_anthropometry.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Keeps participants with at least one measured body dimension.
+#
+# METHODS       Data cleaning; no analysis choice.
+# =============================================================================
 """Retain any participant with at least one measured body dimension."""
 
 from pathlib import Path

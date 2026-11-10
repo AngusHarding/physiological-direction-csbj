@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/1_cohort/02_import_recent_illness.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the three recent-illness questions (HSQ500, HSQ510,
+#               HSQ520) for the ten cycles, keeping NHANES codes as published
+#               (a missing answer is not turned into "no").
+#
+# METHODS       Data import for the "no recent acute illness" rule in
+#               "Participants and endpoints".
+# =============================================================================
 """Import source-coded recent-illness questionnaire variables across ten cycles.
 
 This mirrors import_demographics.py but reads the Health Status Questionnaire

@@ -1,3 +1,30 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/03_build_young_healthy_reference.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Decides who belongs to the NHANES III young-healthy reference
+#               (1,053: 467 men, 586 women). No mortality variable is read.
+#
+# METHODS       "Young-healthy reference" ("The reference comprised ... 1,053 in
+#               NHANES III"). Supp. Section Zero, "NHANES III": "ages 18-29;
+#               body mass index 18.5-24.9 kg/m2; never smoked; fewer than 30
+#               drinking occasions per month; no reported diabetes, myocardial
+#               infarction, osteoporosis, arthritis, congestive heart failure,
+#               stroke, chronic bronchitis, emphysema, goitre, thyroid disease,
+#               lupus, gout, skin cancer or other cancer (asthma did not
+#               exclude); and no functional impairment (HAH1, HAH2 and HAH8).
+#               Missing answers were handled more permissively than in
+#               continuous NHANES: only affirmative disease answers excluded,
+#               missing alcohol components counted as zero, and missing
+#               functional items did not count as impairment. Drinking
+#               frequency is not the same measure as drinks per week".
+#
+# PSEUDOCODE   (applied in order; each step's count is saved)
+#   interview age < 30 -> BMI 18.5-24.9 -> never smoked (HAR1 = 2)
+#   -> beer + wine + spirits occasions per month < 30 (missing = 0)
+#   -> no "yes" to diabetes, heart attack, osteoporosis or the 11 HAC1 items
+#   -> no functional item (HAH1, HAH2, HAH8) coded above 1 (any difficulty);
+#      unanswered items count as no difficulty
+# =============================================================================
 """Build the NHANES III young-healthy reference cohort.
 
 SPECIFICATION: SPECIFICATION.md Decision 8.

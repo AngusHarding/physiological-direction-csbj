@@ -1,3 +1,38 @@
+# =============================================================================
+# READ ME FIRST: s3_healthy_range.py  (Results 3)
+# -----------------------------------------------------------------------------
+# RESULTS 3     "Healthy-range values predicted mortality beyond abnormality
+#               flags."
+#
+# WHAT IT DOES  Places every reading in one of five zones and asks, in held-out
+#               survey cycles, whether exact values add mortality prediction
+#               beyond knowing which readings are abnormal, and which zone the
+#               added information comes from. Also compares adverse distance
+#               (DA) with counts of abnormal markers. No mortality score q is
+#               used here.
+#
+# METHODS       "Held-out prediction" (log partial likelihood per 1,000 deaths;
+#               concordance); "Uncertainty"; "Survival models".
+#
+# MAKES         Figure 3a-d; Supp. Tables S3.3-S3.6; every Results 3 number.
+#
+# PSEUDOCODE
+#   zone of each reading (person x marker): below limit / low corridor /
+#     young-healthy / high corridor / above limit; clinical limits win
+#   for each of 20 divisions of the ten cycles into 5 + 5, both directions:
+#     design (which flag and slope columns exist) learned on the training half
+#     penalty for each model chosen by leave-one-cycle-out inside training
+#     fit each model on training; evaluate the log likelihood on the other half
+#   models (all with sex + age):  A  nothing else
+#                                 T  + clinical flags
+#                                 TZ + corridor flags
+#                                 Full + exact value within every zone
+#                                 Full minus one zone group's values
+#                                 single scores: DA, two abnormal counts
+#   gain = (log lik. model 2 - log lik. model 1) / evaluated deaths x 1,000,
+#          both halves pooled, then averaged over the 20 divisions
+#   intervals: 200 participant draws (within cycle x sex), penalties fixed
+# =============================================================================
 """Results 3: healthy-range values predicted mortality beyond abnormality flags.
 
 The question
@@ -105,6 +140,11 @@ BOOTSTRAP_SEED, BOOTSTRAP_DRAWS = 20261015, 200
 # ===========================================================================
 # Data: zones and scores (no outcome is used here)
 # ===========================================================================
+# -- INPUT: zones and scores (no outcome is used here) -----------------------
+# Results 3: "In NHANES 1999-2018 (11,497 participants; 2,494 deaths; 38
+#   markers), we placed each reading in one of five zones". The single scores
+#   are DA and "the proportion of markers beyond either clinical limit, and the
+#   proportion beyond the adverse-side limit".
 class Data:
     def __init__(self):
         c = data.load_modern()
@@ -130,6 +170,16 @@ class Data:
         parts = pd.read_csv(INPUTS / "cycle_partitions.csv")
         self.partitions = [(r.cycles_A.split("|"), r.cycles_B.split("|")) for r in parts.itertuples()]
 
+    # -- CALCULATION: the five zones ---------------------------------------------
+    # Results 3: "below or above the clinical limit; in a low or high corridor,
+    #   clinically normal but outside the same-sex young-healthy interval; or
+    #   within the young-healthy interval (Fig. 3a)". Figure 3 legend: "Clinical
+    #   abnormality takes precedence where intervals overlap".
+    # How: start everyone in the young zone; below the young-healthy 2.5th
+    #   percentile -> low corridor; above the 97.5th -> high corridor; then the
+    #   clinical limits are applied last, so they overwrite the corridors
+    #   (precedence). Limits by marker and sex:
+    #   inputs/clinical_and_young_healthy_ranges.csv (Supp. Tables S3.1-S3.2).
     def classify(self, ranges: pd.DataFrame) -> np.ndarray:
         ranges = ranges.set_index(["marker", "sex_code"])
         zone = np.full(self.raw.shape, YOUNG, dtype=np.int8)
@@ -155,6 +205,12 @@ class Data:
 # ===========================================================================
 # The design learned from one training sample
 # ===========================================================================
+# -- CALCULATION: the model columns, learned from training rows only ---------
+# Flags = one 0/1 column per non-young zone seen in training. Slopes = the
+# exact value (coordinate minus the zone median) inside a zone, kept where the
+# zone has at least 50 readings with 10 distinct values. Evaluation rows reuse
+# the training design (Sample(..., design=train.design) in fit_half), so
+# nothing about the evaluation half shapes the model.
 class Design:
     """Which flag and slope columns exist, and their anchors, learned from training rows only.
 
@@ -222,12 +278,19 @@ class Sample:
         return np.column_stack([self.base, self.markers[:, self.design.columns[model]]])
 
 
+# Ridge penalty for each column: sex and age unpenalised, every marker column
+# penalised by the same amount.
 def penalty(X: np.ndarray, lam: float) -> np.ndarray:
     p = np.full(X.shape[1], lam)
     p[:2] = 0.0                                # sex and age are not penalised
     return p
 
 
+# -- CALCULATION: choosing the penalty inside the training half ---------------
+# Each training half holds five cycles; the penalty is chosen by
+# leave-one-cycle-out within those five (best summed held-out log likelihood
+# over the grid LAMBDA_GRID, extended if the best value is at an edge). The
+# evaluation half is never used.
 def tune(model: str, inner: list) -> float:
     """Choose the penalty by leave-one-cycle-out within the training half.
 
@@ -265,6 +328,10 @@ def tune(model: str, inner: list) -> float:
     return max(scores, key=scores.get)
 
 
+# -- CALCULATION: held-out concordance ---------------------------------------
+# Results 3: exact values "raised held-out concordance from 0.671 to 0.698".
+# For each death, compare with every same-cycle participant still at risk;
+# concordant if the person who died had the higher predicted risk.
 def concordance(s: Sample, score: np.ndarray) -> tuple[float, float]:
     num = pairs = 0.0
     for g in np.unique(s.strata):
@@ -278,6 +345,14 @@ def concordance(s: Sample, score: np.ndarray) -> tuple[float, float]:
     return num, pairs
 
 
+# -- CALCULATION: one training half -> one evaluation half --------------------
+# Results 3: "We compared nested Cox models on survey cycles withheld from
+#   training: sex and age; then clinical abnormality flags; then corridor
+#   flags; then exact values within each zone."
+# How: build the design on training rows; evaluation rows use that design;
+#   choose each penalty inside training (tune) unless given (bootstrap); fit
+#   on training; log likelihood of the evaluation rows at the training
+#   coefficients (PHReg(...).loglike(beta)); concordance.
 def fit_half(d: Data, train_rows, eval_rows, lambdas: dict | None = None) -> dict:
     """Fit every model on the training rows and evaluate it on the evaluation rows.
 
@@ -327,6 +402,10 @@ def _start() -> None:
     _D["d"] = Data()
 
 
+# -- UNCERTAINTY: one bootstrap draw -----------------------------------------
+# Figure 3 legend: "Bars are 95% intervals from 200 participant-bootstrap
+#   draws within cycle and sex, holding the selected penalties and
+#   preprocessing fixed". One resample serves all 20 divisions.
 def bootstrap_pool(d: Data, draw: int) -> np.ndarray:
     """Participants resampled with replacement within cycle x sex; one resample serves all divisions."""
     rng = np.random.default_rng([BOOTSTRAP_SEED, draw])
@@ -336,6 +415,8 @@ def bootstrap_pool(d: Data, draw: int) -> np.ndarray:
     return np.sort(np.concatenate(parts))
 
 
+# One job = one division, one direction (A trains or B trains), one draw.
+# Divisions: inputs/cycle_partitions.csv (20 fixed divisions of the ten cycles).
 def run_job(job: tuple) -> dict:
     d = _D["d"]
     division, half, draw, lambdas = job
@@ -355,6 +436,17 @@ def flatten(results: list) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+# -- CALCULATION: the gains reported in Results 3 ----------------------------
+# Results 3: "Gains are held-out log partial likelihood per 1,000 deaths,
+#   averaged over 20 divisions". "Clinical flags added 143 per 1,000 deaths to
+#   sex and age" [flags_vs_sex_age = T - A]; "Corridor flags added 5.1"
+#   [TZ - T]; "Exact values added 45.1 beyond all flags" [Full - TZ]; removing
+#   young-zone values "lost 45.1" [Full - (Full without young slopes)];
+#   "adverse distance (DA) added 122.9 per 1,000 deaths" [DA - A].
+# How: within a division, sum log likelihoods over both halves and divide by
+#   the evaluated deaths in both halves, x 1,000; main() then averages over
+#   the 20 divisions and counts the divisions with a positive gain ("with a
+#   gain in all 20 divisions").
 def gains(fits: pd.DataFrame) -> pd.DataFrame:
     """Per draw and division: held-out log-likelihood differences per 1,000 deaths, both halves pooled."""
     out = []
@@ -384,6 +476,7 @@ def fit_jobs(jobs: list, workers: int) -> list:
 # ===========================================================================
 # Figure 3
 # ===========================================================================
+# Draws Figure 3 from this run's numbers.
 def figure3(shares: pd.Series, est: pd.DataFrame) -> None:
     """Figure 3: a, where readings lie; b, what exact values add; c, loss when detail is
     removed; d, adverse distance versus counts of abnormal markers. Gains per 1,000 deaths."""
@@ -466,6 +559,8 @@ def figure3(shares: pd.Series, est: pd.DataFrame) -> None:
     V.save_figure(fig, OUT, "figure3")
 
 
+# 95% interval = 2.5th-97.5th percentiles of the 200 draws, each draw already
+# averaged over the 20 divisions.
 def intervals(boot: pd.DataFrame) -> dict:
     """95% percentile interval (numpy linear rule) of each quantity over the bootstrap draws.
 

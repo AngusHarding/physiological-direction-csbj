@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/06_harmonise_physical_activity.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Classifies physical activity within each questionnaire era.
+#
+# METHODS       Table 1 ("physically inactive", era-specific definitions) and
+#               Table 4 (recreational activity, 2007-2014).
+# =============================================================================
 """Harmonize physical activity while retaining the questionnaire-era distinction.
 
 The all-cycle flag means broadly nonsedentary, not guideline-compliant exercise.

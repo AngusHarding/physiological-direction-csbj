@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/3_body_and_bp/04_import_blood_pressure.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads all four blood-pressure readings and the pulse.
+#
+# METHODS       Data import for Supp. Section Zero, "Blood pressure and pulse".
+# =============================================================================
 """Import the ten NHANES blood-pressure examination files without deriving values.
 
 This first stage deliberately preserves readings 1 through 4. Reading 1 is not

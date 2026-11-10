@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/5_health_conditions/02_harmonise_self_reported_disease.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Codes each condition as 1 = yes, 0 = no, missing = unknown
+#               (never treated as no), with flags for whether it was asked.
+#
+# METHODS       Supp. Section Zero, "Missing data": "an unanswered disease question was
+#               never treated as absence of the condition"; the reference rule in
+#               7_marker_panel/04; Table 1 conditions; Table 4.
+# =============================================================================
 """Harmonise doctor-diagnosed condition responses to 1=yes, 0=no, NA=unknown.
 
 No missing response is converted to absence.  Diabetes code 3 (borderline) is

@@ -1,3 +1,32 @@
+# =============================================================================
+# READ ME FIRST: s1_sex_gap.py  (Results 1)
+# -----------------------------------------------------------------------------
+# RESULTS 1     "Physiological distance did not track women's lower mortality."
+#
+# WHAT IT DOES  Tests two predictions: (1) women are closer than men to the
+#               young-healthy reference; (2) adjusting for distance brings
+#               women's mortality towards men's. Also makes Table 1 and
+#               Figure 1.
+#
+# METHODS       "Distances"; "Survival models"; "Sex differences";
+#               "Uncertainty" (participant bootstrap).
+#
+# MAKES         Table 1; Figure 1a-d; every Results 1 number (numbers.csv).
+#
+# PSEUDOCODE
+#   for each era (NHANES 1999-2018; NHANES III):
+#     DA, DM, DE for every participant              (measures.py)
+#     each distance rescaled to cohort SD
+#     sex difference = OLS(distance ~ female + age spline + period)   [Fig. 1c]
+#     female HR, sex only = Cox(female)                               [Fig. 1d]
+#     female HR, adjusted = Cox(female + distance), for each distance [Fig. 1d]
+#     HR per SD of distance = the distance coefficient in that model
+#   intervals: 500 draws resampling participants within cycle x sex
+#     (sex x phase in NHANES III); distances not re-derived in a draw
+#   Fig. 1a,b: in broader samples (ages 18-79), logistic regression of
+#     death within ten years on an age spline, separately by sex
+#   Table 1: characteristics of women and men in each cohort
+# =============================================================================
 """Results 1: physiological distance did not track women's lower mortality.
 
 The question
@@ -11,7 +40,7 @@ Scope
 -----
 Population   the two analysis cohorts (data.py: aged 52-79, complete marker panel,
              linked follow-up); Part B uses broader adult samples (ages 18-79).
-Endpoint     accident-censored mortality (data.py).
+Endpoint     qualifying deaths exclude identified accidents (data.py).
 Estimands    (a) women minus men in each distance, in cohort SDs, adjusted for an
              age spline and survey period (ordinary least squares); (b) the female
              hazard ratio with sex alone and with each distance added; (c) the hazard
@@ -82,6 +111,10 @@ DISTANCES = {"DA": "Adverse distance", "DM": "Mahalanobis distance", "DE": "Eucl
 # ===========================================================================
 # Part A. Distance and mortality
 # ===========================================================================
+# -- CALCULATION: the three distances for each participant -------------------
+# Results 1: "We measured physiological distance in two ways, neither fitted to
+#   mortality. Adverse distance (DA) ... Mahalanobis distance (DM) ..." DE is
+#   added as a check. Formulas: measures.py.
 def distances(c: data.Cohort) -> pd.DataFrame:
     """Each participant's three distances, in their natural units."""
     return pd.DataFrame({"DA": M.adverse_distance(c.x),
@@ -89,6 +122,18 @@ def distances(c: data.Cohort) -> pd.DataFrame:
                          "DE": M.euclidean_distance(c.z)})
 
 
+# -- CALCULATION: sex differences in distance and the female hazard ratio ----
+# Results 1: "After adjustment for age and survey period, women's adverse
+#   distance exceeded men's by 0.19 standard deviations (SD) in both eras"
+#   [contrast, via models.sex_contrast].
+#   "The female-to-male hazard ratio was 0.62 (0.57 to 0.68) in NHANES
+#   1999-2018 and 0.71 (0.66 to 0.76) in NHANES III" [sex_only = Cox(female)].
+#   "Adjustment for adverse distance moved it further from one, to 0.56 and
+#   0.63" [log_hr = female coefficient in Cox(female + distance)].
+#   "each SD was associated with a 46-62% higher hazard of death" [per_sd].
+# How: each distance is standardised to cohort SD; the Cox models are
+#   models.cox (attained age, delayed entry, Efron ties, cycle strata in
+#   NHANES 1999-2018).
 def estimates(era: str, people: pd.DataFrame, dist: pd.DataFrame) -> dict:
     """All Part A quantities for one sample (the cohort itself or one bootstrap draw).
 
@@ -130,6 +175,11 @@ def _one_draw(draw: int) -> dict:
             **estimates(era, _COHORT["people"].iloc[rows], _COHORT["dist"].iloc[rows])}
 
 
+# -- UNCERTAINTY: 500 participant-bootstrap draws ----------------------------
+# Figure 1 legend: "bars, 95% intervals from 500 participant-bootstrap draws".
+# Each draw resamples participants within cycle x sex (sex x phase in NHANES
+# III; models.bootstrap_strata) and repeats estimates(). The reference and
+# transformations are held fixed (Supp. Table S0.7).
 def run_bootstrap(workers: int, draw_numbers) -> pd.DataFrame:
     """Participant-bootstrap draws for both cohorts (draw numbers 1..500 for the full set).
 
@@ -166,6 +216,15 @@ def summarise(point: dict, draws: pd.DataFrame | None) -> pd.DataFrame:
 # ===========================================================================
 # Part B. Ten-year mortality by age, in broader adult samples
 # ===========================================================================
+# -- COHORT: broader NHANES 1999-2008 sample for Figure 1a ------------------
+# Figure 1 legend: "These panels use broader adult samples with no biomarker
+#   requirement: NHANES 1999-2008, ages 20-79 (13,139 participants; 1,374
+#   deaths) ... Only cycles in which all survivors had ten years of follow-up
+#   are included."
+# How: eligible adults from 1999-2008 with the Table 1 covariates and
+#   follow-up > 0. No marker panel is required. Eligibility starts at 18, but
+#   education (DMDEDUC2) is asked only from age 20, so requiring it makes the
+#   sample 20-79, as the legend states.
 def broad_modern() -> pd.DataFrame:
     """NHANES 1999-2008 adults aged 18-79 with complete Table 1 covariates and follow-up.
 
@@ -192,6 +251,8 @@ def broad_modern() -> pd.DataFrame:
                          "event": data.principal_endpoint(d.mortstat, d.ucod_leading)})
 
 
+# -- COHORT: broader NHANES III sample for Figure 1b ------------------------
+# Figure 1 legend: "NHANES III, ages 18-79 (16,040; 1,731)".
 def broad_iii(adult: pd.DataFrame) -> pd.DataFrame:
     """NHANES III adults aged 18-79 with linked follow-up."""
     d = adult[adult.HSAGEIR.between(18, 79)].merge(data.mortality_iii(), on="SEQN", how="inner")
@@ -200,6 +261,14 @@ def broad_iii(adult: pd.DataFrame) -> pd.DataFrame:
                          "months": d.permth_exm, "dead": d.mortstat, "event": d.event})
 
 
+# -- CALCULATION: ten-year probability of death by age (Figure 1a,b) ---------
+# Figure 1 legend: "Probability of death within ten years of examination, by
+#   age and sex ... Lines, age-spline logistic estimates; bands, 95%
+#   model-based intervals". "Deaths exclude identified accidents (Methods)."
+# How: survivors followed for less than ten years are dropped (their ten-year
+#   status is unknown); died_10y = principal-endpoint death within 120 months;
+#   logistic regression on a natural cubic age spline (4 df), separately for
+#   women and men.
 def ten_year_curves(era: str, d: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     """Probability of an endpoint death within ten years, by age, separately for each sex.
 
@@ -225,6 +294,10 @@ def ten_year_curves(era: str, d: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
 # ===========================================================================
 # Part C. Table 1
 # ===========================================================================
+# -- TABLE 1: participant characteristics, NHANES 1999-2018 ------------------
+# Table 1 legend: "Deaths and crude rates use the principal endpoint, which
+#   excludes identified accidental deaths (Methods)." Diagnosed conditions: 13
+#   in NHANES 1999-2018.
 def characteristics_modern(people: pd.DataFrame) -> pd.DataFrame:
     p = S.PREP
     d = people[["SEQN", "female", "RIDAGEYR", "followup_years", "event"]].rename(columns={"RIDAGEYR": "age"})
@@ -257,6 +330,10 @@ CONDITION_ITEMS = ["HAC1A", "HAC1C", "HAC1D", "HAC1F", "HAC1G", "HAC1J", "HAC1K"
 ALCOHOL_ITEMS = ["MAPE1", "MAPE2", "MAPE3S", "MAPE4"]
 
 
+# -- TABLE 1: participant characteristics, NHANES III ------------------------
+# The same rows from NHANES III questionnaire and examination items; 11
+# diagnosed conditions. Alcohol uses the same drinks-per-week rule as NHANES
+# 1999-2018.
 def characteristics_iii(people: pd.DataFrame, adult: pd.DataFrame) -> pd.DataFrame:
     exam = data.read_nhanes3("exam", ["SEQN", "BMPBMI"] + ALCOHOL_ITEMS)
     d = people[["SEQN", "female", "age", "followup_years", "event"]] \
@@ -282,6 +359,11 @@ def characteristics_iii(people: pd.DataFrame, adult: pd.DataFrame) -> pd.DataFra
         "followup": d.followup_years, "death": d.event})
 
 
+# -- TABLE 1: the cells ------------------------------------------------------
+# Results 1: "Crude death rates were 18.4 versus 27.7 per 1,000 person-years in
+#   NHANES 1999-2018 and 38.8 versus 48.8 in NHANES III. Women reported a mean
+#   of 1.40 versus 1.27 and 1.00 versus 0.79 doctor-diagnosed conditions
+#   (Table 1)." Death rate = 1,000 x principal-endpoint deaths / person-years.
 def table1(groups: dict) -> pd.DataFrame:
     """Table 1 cells. Percentages are of everyone of that sex (missing answers included
     in the denominator); means, SDs, medians and IQRs use those with a value."""
@@ -315,6 +397,7 @@ def table1(groups: dict) -> pd.DataFrame:
 # ===========================================================================
 # Part D. Figure 1
 # ===========================================================================
+# Draws Figure 1 from this run's numbers (drawing code: render_figures.py).
 def figure1(curves: pd.DataFrame, counts: list[dict], est: pd.DataFrame) -> None:
     """Draw this run's results with the author-approved Figure 1 layout.
 
@@ -355,6 +438,8 @@ def figure1(curves: pd.DataFrame, counts: list[dict], est: pd.DataFrame) -> None
 # ===========================================================================
 # Numbers quoted in the Results 1 text
 # ===========================================================================
+# Collects every Results 1 number quoted in the text into numbers.csv, which
+# check_against_paper.py compares with the manuscript.
 def quoted_numbers(est: pd.DataFrame, groups: dict, counts: list[dict], cohorts: dict) -> pd.DataFrame:
     rows = []
 

@@ -1,3 +1,29 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/7_marker_panel/02_select_transformations.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Chooses one shape transformation per marker from the five
+#               candidates, using only the markers' distributions in the
+#               29,053 complete-panel adults (women and men together), and
+#               applies it. No outcome, age, sex difference or reference
+#               membership is used.
+#
+# METHODS       "Panel and transformations": "one transformation per marker
+#               (identity, square root, cube root, logarithm or reciprocal) was
+#               chosen by a fixed rule on the pooled-sex adult panel, without
+#               reference to outcomes." Supp. Section Zero, "Transformations".
+#
+# PSEUDOCODE
+#   check the input is the certified raw panel (29,053 rows; SEQN, sex, age
+#     and the 38 markers only, so no outcome column can be present)
+#   for each marker:
+#     if the raw values pass all three tests -> keep identity
+#     else -> the first of sqrt, cbrt, log, reciprocal that passes all three
+#     if none passes all three -> the one passing most; ties by rank sum,
+#       then by that order
+#   tests: |skew| <= 1, |excess kurtosis| <= 3, normal Q-Q R^2 >= 0.98
+#   stability (descriptive only, never changes the choice): rerun within each
+#     sex and in 100 sex-stratified bootstrap samples
+# =============================================================================
 """Select and apply transformations using only the locked full cohort.
 
 Beginner's map
@@ -67,6 +93,12 @@ def transform_values(values: np.ndarray, candidate: str) -> np.ndarray | None:
     raise ValueError(f"unknown transformation: {candidate}")
 
 
+# -- CALCULATION: the distribution tests -------------------------------------
+# Supp. Section Zero: "Identity was kept when absolute bias-corrected skewness
+#   was at most 1, absolute excess kurtosis at most 3 and normal Q-Q R^2 at
+#   least 0.98." Skewness and kurtosis are scipy's bias-corrected estimates;
+#   Q-Q R^2 is the squared correlation of the sorted values with normal
+#   quantiles (scipy.stats.probplot).
 def diagnostics(values: np.ndarray, candidate: str) -> dict:
     """Calculate the four predeclared distribution diagnostics."""
     transformed = transform_values(values, candidate)
@@ -92,6 +124,13 @@ def diagnostics(values: np.ndarray, candidate: str) -> dict:
     }
 
 
+# -- CALCULATION: the decision rule ------------------------------------------
+# Supp. Section Zero: "Otherwise the first transformation meeting all three
+#   criteria was chosen, in the order square root, cube root, logarithm,
+#   reciprocal; if none met all three, the one meeting most was chosen, with
+#   ties broken by the rank sum of the three statistics and then by the same
+#   order. No offsets were added, so a genuine zero ruled out the logarithm
+#   and reciprocal."
 def evaluate_marker(values: np.ndarray, marker: str, retain_identity: bool = False) -> pd.DataFrame:
     """Build the candidate ledger and apply the locked two-step decision rule."""
     rows = []
@@ -146,6 +185,10 @@ def choose(values: np.ndarray, marker: str, retain_identity: bool) -> str:
     return str(ledger.loc[ledger.selected, "candidate"].iloc[0])
 
 
+# -- CHECK: outcome-blind input ----------------------------------------------
+# Refuses any file except the certified raw panel: exact fingerprint, 29,053
+# rows, and columns exactly SEQN, sex, age and the 38 markers. No mortality
+# file is read anywhere in this script.
 def validate_input(panel: pd.DataFrame, spec: pd.DataFrame) -> list[str]:
     """Refuse to analyse anything except the certified raw panel."""
     markers = spec.marker.tolist()

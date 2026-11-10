@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/06_import_lipids.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads total and HDL cholesterol and triglycerides.
+#
+# METHODS       Data import for Supp. Section Zero, "Renal, body-size and lipid measures".
+# =============================================================================
 """Import full-sample cholesterol/HDL and fasting triglycerides separately."""
 
 from pathlib import Path

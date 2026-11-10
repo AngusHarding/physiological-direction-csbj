@@ -1,3 +1,18 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/7_marker_panel/03_build_analysis_master.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Attaches questionnaire, lifestyle, socioeconomic and mortality
+#               fields to the 29,053 complete-panel adults, one row each.
+#
+# METHODS       Supp. Section Zero, "Complete panel": "Questionnaire,
+#               socioeconomic and mortality fields were then attached without
+#               removing anyone, and each analysis applied its own further
+#               requirements."
+#
+# PSEUDOCODE
+#   start from the certified 29,053-row panel
+#   left-join each listed table by SEQN; stop if anyone is added or lost
+# =============================================================================
 """Build the inclusion-preserving participant master table.
 
 Beginner's map

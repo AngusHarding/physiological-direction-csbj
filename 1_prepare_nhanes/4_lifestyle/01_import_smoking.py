@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/01_import_smoking.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the two smoking questions (SMQ020, SMQ040).
+#
+# METHODS       Data import; used for the reference (never smoked), Table 1,
+#               Results 7 and Table 4.
+# =============================================================================
 """Import the two smoking-status questions from all ten NHANES cycles.
 
 This stage preserves questionnaire codes. It does not classify participants or

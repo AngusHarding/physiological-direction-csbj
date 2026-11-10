@@ -1,3 +1,33 @@
+# =============================================================================
+# READ ME FIRST: data.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Loads the analysis cohorts from the prepared tables: who is in
+#               each cohort, their endpoint, follow-up and marker coordinates.
+#               No model is fitted here.
+#
+# METHODS       "Participants and endpoints": "Mortality cohorts" and
+#               "Endpoints"; "Statistical analysis": "Survival models"
+#               (attained age, delayed entry).
+#
+# USED BY       Every Results script. load_modern / load_iii: Results 1-4 and 7.
+#               transformed_values: Results 2. matched_rows: Results 2 (Table 2)
+#               and 4 (Phenotypic Age comparison). load_common32 and transform:
+#               Results 5 and 6.
+#
+# PSEUDOCODE
+#   NHANES 1999-2018 cohort:
+#     start from the 29,053 adults with a complete 38-marker panel
+#     attach the linked mortality file
+#     keep age >= 52 AND follow-up months > 0   (no mortality link -> dropped)
+#     event = died AND cause recorded AND cause != accident
+#     entry = examination age; exit = entry + months / 12
+#     check: 11,497 people, 2,494 events
+#   NHANES III cohort: the same, with interview age, linkage-eligible
+#     participants only, and the complete 34-marker panel;
+#     check: 4,474 people, 3,401 events
+#   Matched 1999-2010 cohort: cycles 1999-2010 with all Phenotypic Age inputs;
+#     check: 6,759 people, 2,112 events
+# =============================================================================
 """Load the two analysis cohorts, one row per participant.
 
 What a cohort is
@@ -66,12 +96,28 @@ class Cohort:
     markers: list
 
 
+# -- CALCULATION: the principal endpoint -------------------------------------
+# Methods, "Endpoints": "The principal endpoint counted deaths with a recorded
+#   underlying cause other than an identified accident. Identified accidental
+#   deaths and deaths without a recorded cause were censored at death.
+#   Accidents cannot be identified in the public-use files for 2015-2018, where
+#   all deaths with a recorded cause were counted"
+# How: event = 1 if died (mortstat 1) AND a cause is recorded AND the cause is
+#   not code 4 (accident; settings.ACCIDENT_CODE); otherwise 0. Follow-up still
+#   ends at death, so a 0 for an accidental or no-cause death is a censoring at
+#   death. The 2015-2018 files never carry code 4, so all deaths with a cause
+#   count there.
 def principal_endpoint(mortstat: pd.Series, cause: pd.Series) -> pd.Series:
     """1 for a linked death with a recorded cause other than accident, else 0."""
     died = mortstat.eq(1)
     return (died & cause.notna() & cause.ne(S.ACCIDENT_CODE)).astype(int)
 
 
+# -- CALCULATION: attained-age entry and exit --------------------------------
+# Methods, "Survival models": "Cox models with attained age as the time scale,
+#   delayed entry at examination age (interview age in NHANES III)".
+# How: entry = age at examination (interview age in NHANES III);
+#   exit = entry + months of follow-up / 12.
 def add_follow_up(people: pd.DataFrame, age: str) -> None:
     """Add follow-up in years and the attained-age entry and exit times (in place)."""
     people["followup_years"] = people.permth_exm / 12.0         # months to years
@@ -91,6 +137,13 @@ def mortality_1999_2018() -> pd.DataFrame:
     return m
 
 
+# -- COHORT: NHANES 1999-2018, ages 52-79 ------------------------------------
+# Methods, "Mortality cohorts": "11,497 of 14,312 eligible participants in
+#   NHANES 1999-2018 (2,494 principal-endpoint deaths)".
+# How: complete-panel adults (29,053; the upper age limit of 79 is applied in
+#   data preparation), restricted to age >= 52 and follow-up > 0. The
+#   follow-up rule also removes the 12 participants with no mortality link
+#   (11,509 -> 11,497; see the methods checklist, item 3).
 def load_modern() -> Cohort:
     # The two coordinate tables cover all 29,053 adults with a complete 38-marker
     # panel, in the same participant order; the healthy reference is flagged.
@@ -129,6 +182,8 @@ def read_nhanes3(file: str, variables: list[str]) -> pd.DataFrame:
     return pd.read_csv(S.III_PREP / f"results_{file}_variables.csv", usecols=variables)[variables]  # public_code
 
 
+# NHANES III linked mortality: only participants eligible for linkage
+# (eligstat 1), with the same endpoint rule as above.
 def mortality_iii() -> pd.DataFrame:
     """The NCHS 2019 linked mortality file for NHANES III (participants eligible for linkage)."""
     m = pd.read_csv(S.III_PREP / "mortality_linked.csv")  # public_code: copied by 2_prepare_nhanes_iii/05
@@ -137,6 +192,12 @@ def mortality_iii() -> pd.DataFrame:
     return m
 
 
+# -- COHORT: NHANES III, ages 52-79 ------------------------------------------
+# Methods, "Mortality cohorts": "4,474 in NHANES III, drawn from 13,195 adults
+#   with complete 34-marker panels (3,401 deaths)". "In NHANES III, interview
+#   age served as the entry age".
+# How: linked participants with follow-up > 0 and interview age >= 52, kept
+#   only if they have the complete 34-marker panel.
 def load_iii() -> Cohort:
     out = S.III_PREP  # public_code
     markers = pd.read_csv(out / "nhanes3_panel_markers.csv").marker.tolist()
@@ -180,6 +241,10 @@ def _apply_transforms(raw: pd.DataFrame, rule: pd.Series, markers: list, recipro
     return pd.DataFrame({m: functions[rule[m]](raw[m].to_numpy(float)) for m in markers}, index=raw.index)
 
 
+# Transformed marker values before any reference is applied. Results 2 uses
+# them to rebuild coordinates under the SS, SC and PC references
+# (measures.reference_coordinates) and, for Table 2, to re-estimate the
+# reference without the held-out cycle.
 def transformed_values(c: Cohort) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Each marker after its shape transformation (log, square root, ...) but before
     it is centred and scaled by any reference.
@@ -216,6 +281,10 @@ def transformed_values(c: Cohort) -> tuple[pd.DataFrame, pd.DataFrame]:
 MATCHED_CYCLES = S.CYCLES[:6]                 # 1999-2000 to 2009-2010: C-reactive protein measured
 
 
+# -- INPUTS: published Phenotypic Age (Levine et al., 2018) ------------------
+# The nine blood markers of Phenotypic Age, converted to the units of the
+# published formula. Results 4: "published Phenotypic Age" in the matched
+# NHANES 1999-2010 comparison. The formula itself is in s4_panel.py.
 def phenoage_inputs(seqn: pd.Series) -> pd.DataFrame:
     """The nine blood markers of published Phenotypic Age, in its units (Levine et al., 2018).
 
@@ -239,6 +308,11 @@ def phenoage_inputs(seqn: pd.Series) -> pd.DataFrame:
     return out.replace([np.inf, -np.inf], np.nan).reset_index(drop=True)
 
 
+# -- COHORT: matched NHANES 1999-2010 ----------------------------------------
+# Results 2: "a matched NHANES 1999-2010 cohort (6,759 participants; 2,112
+#   deaths)", used for Table 2 and for the Phenotypic Age comparison in Results 4.
+# How: the 1999-2018 cohort, restricted to 1999-2010 (when C-reactive protein
+#   was measured) and to people with every Phenotypic Age input.
 def matched_rows(c: Cohort) -> np.ndarray:
     """Rows of the 1999-2018 cohort in the matched cohort: 1999-2010, all PhenoAge inputs present."""
     assert c.era == "modern"
@@ -255,6 +329,12 @@ def common32_markers() -> pd.DataFrame:
     return pd.read_csv(S.PIPELINE / "inputs" / "common32_markers.csv")
 
 
+# -- COHORT INPUT: the 32 markers measured in both eras ----------------------
+# Methods, "Distances": the bounded distance DB is computed "over the 32
+#   markers measured in both eras". Results 5 (transport between eras) and
+#   Results 6 (the screen) use this table, which holds all adults aged 18-79,
+#   so that each script can rebuild its own reference and choose its own
+#   older cohort.
 def load_common32(era: str) -> pd.DataFrame:
     """Every adult of an era's prepared panel (ages 18-79) with the 32 common markers.
 
@@ -309,6 +389,11 @@ def load_common32(era: str) -> pd.DataFrame:
     return out
 
 
+# -- CALCULATION: the shape transformations ----------------------------------
+# Methods, "Panel and transformations": "one transformation per marker
+#   (identity, square root, cube root, logarithm or reciprocal)". The choice
+#   for each marker is made in data preparation; here it is applied. Values
+#   outside a transformation's domain become missing, never shifted or clipped.
 def transform(values, kind: str) -> np.ndarray:
     """A shape transformation; values outside its domain become missing (never shifted or clipped)."""
     x = np.asarray(values, dtype=float)

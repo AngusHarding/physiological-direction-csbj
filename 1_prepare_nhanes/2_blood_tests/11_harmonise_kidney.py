@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/11_harmonise_kidney.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Keeps complete urine pairs and codes the kidney-failure
+#               answer as yes / no / unknown.
+#
+# METHODS       Supp. Section Zero, "Renal, body-size and lipid measures".
+# =============================================================================
 """Complete-case urine inputs and materialise valid binary kidney flags."""
 
 from pathlib import Path

@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/12_derive_kidney_features.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Derives urine ACR (100 x albumin / creatinine) and eGFR (CKD-EPI
+#               2021, race-free, from calibrated creatinine, age and sex).
+#
+# METHODS       Supp. Section Zero, "Renal, body-size and lipid measures".
+# =============================================================================
 """Derive urine ACR and race-free CKD-EPI 2021 eGFR.
 
 ACR is available for every complete urine pair. eGFR uses the already verified

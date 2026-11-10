@@ -1,3 +1,32 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/8_adverse_distance/02_estimate_reference_parameters.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  For each marker and sex, the reference median and robust
+#               scale (interquartile range / 1.349) on the transformed scale.
+#
+# METHODS       "Distances": "Adverse distance (DA): the mean excursion beyond
+#               the reference median in each marker's prespecified adverse
+#               direction, on the transformed scale and in units of the
+#               reference interquartile range divided by 1.349."
+#               Supp. Section Zero, "Adverse-excursion coordinates":
+#               "rij = oj [Tj(xij) - mjs] / (IQRjs / 1.349) ... Each marker's
+#               prespecified adverse direction then retains the excursion above
+#               the median, below it or on both sides, and DA averages the
+#               retained absolute excursions across markers."
+#
+# NAMES         "FI branch" and "deficits" are this code's historical names for
+#               adverse distance (DA) and its per-marker excursions; the paper
+#               calls them adverse distance and adverse excursions.
+#
+# THE SIX STEPS (this folder; DA itself is the mean in 3_results/measures.py)
+#   01 lock the reference members (the 1,238 from 7_marker_panel/04)
+#   02 reference median and IQR/1.349 per marker and sex
+#   03 r = orientation x (transformed value - median) / (IQR/1.349)
+#   04 keep only the adverse side: high_only max(r,0); low_only max(-r,0);
+#      two_sided |r|
+#   05 severity = the excursion itself (no dead zone, no cap)
+#   06 put the sign back (+ high, - low) and save the "x" coordinates
+# =============================================================================
 """Estimate sex-specific healthy-reference parameters for the FI branch.
 
 This step estimates transformed-scale quartiles, medians, and robust scales. It
@@ -36,6 +65,9 @@ def fingerprint(path: Path) -> str:
     return digest.hexdigest().upper()
 
 
+# -- CALCULATION: median and IQR/1.349, by marker and sex ---------------------
+# 1.349 is the interquartile range of a standard normal distribution, so
+# IQR/1.349 is on the same scale as an SD for normally distributed values.
 def estimate_parameters(
     transformed: pd.DataFrame, membership: pd.DataFrame, scoring_spec: pd.DataFrame
 ) -> pd.DataFrame:

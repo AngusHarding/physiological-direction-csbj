@@ -1,3 +1,33 @@
+# =============================================================================
+# READ ME FIRST: s7_functional.py  (Results 7)
+# -----------------------------------------------------------------------------
+# RESULTS 7     "Lung function added prediction beyond the routine panel."
+#
+# WHAT IT DOES  For each measurement outside the panel (FEV1 and others), asks
+#               whether adding it to a model that already has the panel's q
+#               score improves held-out mortality prediction.
+#
+# METHODS       "Held-out prediction" (gain per 1,000 evaluated deaths);
+#               "Mortality score" ("Wherever q was used, its direction was
+#               fitted without the scored participant's outcome");
+#               "Uncertainty".
+#
+# MAKES         Figure 7; Supp. Tables S7.2-S7.3; every Results 7 number.
+#
+# PSEUDOCODE
+#   folds: survey cycles (1999-2018; only cycles with >= 20 candidate deaths
+#     are evaluated) or ten sampling-unit folds (NHANES III)
+#   for each candidate, in participants who have it (and height, for
+#   spirometry) and a known smoking status:
+#     for each held-out fold:
+#       q direction = Cox(female + panel markers) on everyone outside the fold
+#       M0 = baseline (sex, age, smoking; + height for spirometry)
+#       M1 = M0 + q          M2 = M1 + candidate
+#       fit M0, M1, M2 on training rows; held-out log likelihood of each
+#     panel gain = sum(M1 - M0) / evaluated deaths x 1,000
+#     candidate gain = sum(M2 - M1) / evaluated deaths x 1,000
+#   intervals: 200 draws per era, every fit (including q) repeated
+# =============================================================================
 """Results 7: lung function added prediction beyond the routine panel.
 
 The question
@@ -96,6 +126,12 @@ def standard(x):
 # ===========================================================================
 # Data
 # ===========================================================================
+# -- CANDIDATES, NHANES 1999-2018 ---------------------------------------------
+# Results 7: "high-sensitivity C-reactive protein, fasting glucose, fasting
+#   insulin and ... HOMA-IR in NHANES 1999-2018", and FEV1. "We restricted
+#   modern spirometry to quality grades A and B" (the SPXNQEFF line). Each
+#   candidate is standardised with its sign set so that higher is worse; CRP is
+#   log-transformed and standardised within assay era.
 def load_modern() -> dict:
     c = data.load_modern()
     d = c.people.copy()
@@ -113,7 +149,8 @@ def load_modern() -> dict:
     glu = glu[glu.WTSAF2YR.notna()].copy()                                           # fasting subsample
     glu["c_glucose"] = standard(glu.LBXGLU.where(glu.LBXGLU.gt(0)))
     glu["c_insulin"] = standard(np.log(glu.LBXIN.where(glu.LBXIN.gt(0))))
-    glu["c_homa"] = standard(np.log((glu.LBXGLU * glu.LBXIN / 22.5).where(glu.LBXGLU.gt(0) & glu.LBXIN.gt(0))))
+    # HOMA-IR = fasting glucose (mg/dL) x fasting insulin / 405.
+    glu["c_homa"] = standard(np.log((glu.LBXGLU * glu.LBXIN / 405).where(glu.LBXGLU.gt(0) & glu.LBXIN.gt(0))))
     sp = pd.read_csv(CANDIDATE_DATA / "candidate_spirometry_raw.csv")
     sp["c_FEV1"] = standard(-sp.SPXNFEV1.where(sp.SPXNQEFF.isin(["A", "B"]) & sp.SPXNFEV1.gt(0)))  # lower is worse
     for frame, cols in ((crp, ["c_hsCRP"]), (glu, ["c_glucose", "c_insulin", "c_homa"]), (sp, ["c_FEV1"])):
@@ -124,6 +161,10 @@ def load_modern() -> dict:
     return finish("modern", d, candidates, {"full": c.markers, "ten": ten})
 
 
+# -- CANDIDATES, NHANES III ---------------------------------------------------
+# Results 7: "forced vital capacity, bone measures, bioimpedance and
+#   tandem-stand time in NHANES III", and FEV1, "used ... without that [quality]
+#   filter". Folds: ten groups of whole sampling units.
 def load_iii() -> dict:
     c = data.load_iii()
     d = c.people.copy()
@@ -149,6 +190,8 @@ def load_iii() -> dict:
     return finish("iii", d, candidates, {"full": c.markers})
 
 
+# Figure 7 legend: "cycles with fewer than 20 candidate deaths contributed only
+# to training". Participants with unknown smoking status are left out.
 def finish(era, d, candidates, panels) -> dict:
     """Drop participants with unknown smoking; list each candidate's evaluable folds."""
     d = d[d.smoking.notna()].reset_index(drop=True)
@@ -174,6 +217,11 @@ def cox_fit(era, d, X):
     return beta
 
 
+# -- CALCULATION: the panel's q direction for one fold -----------------------
+# Results 7: "We held out survey cycles (or sampling-unit folds in NHANES III)
+#   and learned the mortality score without the evaluated fold."
+# How: Cox(female + panel markers) on the rows passed in (everyone outside the
+#   fold); u = marker coefficients / their length (models.cox).
 def direction(era, train, markers):
     """The fold's mortality direction: modern statsmodels-equivalent stratified fit; NHANES III lifelines,
     as in the reviewed analysis (see models.py)."""
@@ -183,6 +231,12 @@ def direction(era, train, markers):
     return b / np.linalg.norm(b)
 
 
+# -- THE BASELINE MODEL ------------------------------------------------------
+# Results 7: "we added forced expiratory volume in one second (FEV1) to a model
+#   containing sex, age, smoking, height and the full-panel mortality score"
+#   [S1: sex, age, former and current smoking, + height for spirometry].
+#   "With a reduced baseline matching the original submission (sex, plus height
+#   for modern spirometry)" [S2].
 def baseline(c, name, spec, era):
     cols = [c.female.to_numpy(float)]
     if spec == "S1":
@@ -192,6 +246,18 @@ def baseline(c, name, spec, era):
     return np.column_stack(cols)
 
 
+# -- CALCULATION: the held-out gains -----------------------------------------
+# Results 7: "FEV1 added 31.1 log partial-likelihood units per 1,000 evaluated
+#   deaths beyond the 38-marker panel in NHANES 2007-2012 ... and 16.6 beyond
+#   the 34-marker panel in NHANES III". "the routine panel itself added 210.2
+#   and 73.5 over the baseline model in the same participants" [panel gain].
+#   "comparing held-out models with and without it on identical rows".
+# How, per fold: q is projected with the direction fitted outside the fold
+#   (q_by_fold); columns are scaled with training means and SDs; M0, M1 and M2
+#   are fitted on training rows and evaluated on the held-out fold;
+#   gains = summed differences / evaluated deaths x 1,000; "folds_improved"
+#   counts folds where M2 beat M1 ("in all three modern evaluation cycles and in
+#   nine of ten NHANES III folds").
 def evaluate(package: dict, d: pd.DataFrame) -> list:
     era = package["era"]
     q_by_fold = {}
@@ -231,6 +297,11 @@ def evaluate(package: dict, d: pd.DataFrame) -> list:
     return rows
 
 
+# -- UNCERTAINTY: one bootstrap draw -----------------------------------------
+# Figure 7 legend: "200 bootstrap draws resampling participants within cycle
+#   and sex (NHANES 1999-2018) or sampling units within strata (NHANES III),
+#   refitting the directions and models with references and marker identities
+#   held fixed." Each participant keeps their fold.
 def resample(d: pd.DataFrame, era: str, draw: int) -> pd.DataFrame:
     """Bootstrap: participants within cycle x sex (1999-2018), whole sampling units within strata (NHANES III).
     Each participant keeps their original fold."""

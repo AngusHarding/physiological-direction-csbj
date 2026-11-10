@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: render_figures.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Draws Figures 1 and 2 in their published layout from the
+#               numbers the Results 1 and 2 scripts hand it.
+#
+# METHODS       None. Drawing only; no fitting, preprocessing or uncertainty
+#               calculation happens here.
+# =============================================================================
 """Approved Figure 1/2 drawing routines, 31 October 2026.
 
 These functions only draw supplied values. Inputs may be the pinned display

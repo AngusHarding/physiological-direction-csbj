@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: data_locations.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  The one file a reader edits: where the downloaded raw NHANES
+#               files are.
+#
+# METHODS       None; settings only.
+# =============================================================================
 """Where the raw data are on your computer. Edit this file before the first run.
 
 Only the two preparation stages read raw files; the Results read the prepared

@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/05_derive_cbc_features.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Derives absolute leukocyte counts (total x percentage / 100),
+#               calculated haematocrit and MCHC from the cleaned blood count.
+#
+# METHODS       Supp. Section Zero, "Blood cells".
+# =============================================================================
 """Build transparent CBC derivatives from the cleaned measured layer.
 
 These columns are deterministic functions, not additional independent blood

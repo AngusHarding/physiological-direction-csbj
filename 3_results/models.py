@@ -1,3 +1,38 @@
+# =============================================================================
+# READ ME FIRST: models.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  The statistical machinery, each piece written once: Cox models,
+#               the women-minus-men contrast, a fast Cox solver (with an
+#               optional ridge penalty), the cross-fitted mortality score q,
+#               bootstraps, intervals, concordance, weighted quantiles and
+#               Kaplan-Meier risk. It chooses no analysis; the s1-s7 scripts do.
+#
+# METHODS       "Statistical analysis": "Survival models", "Sex differences",
+#               "Held-out prediction", "Screening risks", "Uncertainty";
+#               "Physiological distance and the mortality score":
+#               "Mortality score".
+#
+# USED BY       cox, sex_contrast, bootstraps: Results 1 and 2.
+#               mortality_score (q, cross-fitted): Results 2.
+#               RiskSets / ridge_cox: Results 3 (penalised); Results 2 (Table 2),
+#                 5, 6 and 7 with the penalty set to zero (an ordinary Cox fit).
+#               survey_bootstrap_weights, concordance_within: Results 5.
+#               kaplan_meier_risk, weighted_quantile: Results 6.
+#               interval_table: Results 6 and 7.
+#
+# PSEUDOCODE
+#   cox(era, terms):
+#     NHANES 1999-2018: statsmodels PHReg, time = attained age, entry = entry
+#       age, Efron ties, a separate baseline hazard per survey cycle
+#     NHANES III: lifelines, the same time scale and entry, unstratified
+#   sex_contrast: OLS of (value standardised to cohort SD) on
+#     female + age spline + survey period; return the female coefficient
+#   mortality_score: for each fold: fit Cox(female + all coordinates) on the
+#     training rows; u = marker coefficients / their length;
+#     q(test rows) = coordinates . u   (female coefficient not used)
+#   bootstrap: resample rows with replacement within cycle x sex
+#     (sex x phase in NHANES III); 95% interval = 2.5th, 97.5th percentiles
+# =============================================================================
 """The statistical models, each written once.
 
 Cox regression (each era's reviewed program), the women-versus-men contrast,
@@ -64,6 +99,15 @@ def require_finite(coef, what: str) -> None:
         raise FloatingPointError(f"{what}: the fit returned non-finite coefficients; no estimate can use it")
 
 
+# -- CALCULATION: Cox model on attained age ----------------------------------
+# Methods, "Survival models": "Cox models with attained age as the time scale,
+#   delayed entry at examination age (interview age in NHANES III) [48],
+#   Efron's approximation for ties [49], and survey-cycle-specific baseline
+#   hazards in NHANES 1999-2018."
+# How: NHANES 1999-2018 uses statsmodels PHReg with strata = survey cycle,
+#   entry = entry age, ties = "efron". NHANES III uses lifelines (Efron ties by
+#   default), unstratified, with entry_col = entry age. Returns log hazard
+#   ratios (exp gives the hazard ratios in Fig. 1d and Fig. 2d).
 def cox(era: str, frame: pd.DataFrame, terms: list[str]) -> dict:
     """Fit a Cox model of the endpoint on attained age; return {term: log hazard ratio}.
 
@@ -88,6 +132,14 @@ def cox(era: str, frame: pd.DataFrame, terms: list[str]) -> dict:
     return {**dict(zip(terms, coef)), "se": dict(zip(terms, se))}
 
 
+# -- CALCULATION: women-minus-men difference ---------------------------------
+# Methods, "Sex differences": "women-minus-men differences in distances and
+#   scores were estimated by linear regression on sex, an age spline and survey
+#   cycle or phase."
+# How: the value is first standardised to cohort SD; ordinary least squares on
+#   female + age spline + period; the female coefficient is the difference in
+#   SD. Splines and periods are in settings.ERAS.
+# Results 1 (Fig. 1c) and Results 2 (Fig. 2c) report these numbers.
 def sex_contrast(era: str, frame: pd.DataFrame, values: np.ndarray) -> float:
     """Women minus men in `values`, in cohort SDs, adjusted for age and period.
 
@@ -103,6 +155,14 @@ def sex_contrast(era: str, frame: pd.DataFrame, values: np.ndarray) -> float:
 # ---------------------------------------------------------------------------
 # Ridge-penalised Cox regression (Results 3)
 # ---------------------------------------------------------------------------
+# -- CALCULATION: the Cox partial likelihood ---------------------------------
+# The same Cox likelihood as above (attained age, delayed entry, Efron ties,
+# strata), coded so that it can be evaluated quickly many times. It is used to
+# fit models (ridge_cox) and to score held-out data at fixed coefficients.
+# Methods, "Held-out prediction": "evaluated by the evaluation-set Cox log
+#   partial likelihood at training coefficients, reported as gain per 1,000
+#   evaluated deaths". The "gain" is the difference of two such likelihoods,
+#   both computed by evaluate(..., order=0) on the evaluation rows.
 class RiskSets:
     """The Cox partial likelihood for one set of participants, ready for repeated evaluation.
 
@@ -177,6 +237,11 @@ class RiskSets:
         return loglik, score, -((X.T * w) @ X - (self.fac[:, None] * m).T @ m)
 
 
+# -- CALCULATION: fitting a Cox model, optionally with a ridge penalty -------
+# Maximises (Cox log likelihood - 0.5 x sum of penalty x beta^2) by Newton
+# steps. With the penalty set to zero, as in Results 2 (Table 2), 5, 6 and 7,
+# this is an ordinary unpenalised Cox fit. Only Results 3 uses a positive
+# penalty, chosen within training data (s3_healthy_range.tune).
 def ridge_cox(risk: RiskSets, X, penalty, start=None):
     """Maximise log likelihood - 0.5 * sum(penalty * beta^2) by Newton steps with step-halving.
 
@@ -223,6 +288,12 @@ def ridge_cox(risk: RiskSets, X, penalty, start=None):
 # ---------------------------------------------------------------------------
 # The mortality score q (cross-fitted)
 # ---------------------------------------------------------------------------
+# -- CROSS-FITTING: which rows are held out ----------------------------------
+# Results 2: each participant is scored "with a model fitted without their own
+#   survey cycle (NHANES 1999-2018) or sampling-unit fold (NHANES III)".
+# How: NHANES 1999-2018 holds out one survey cycle at a time (ten folds).
+#   NHANES III makes ten folds of whole sampling units (stratum x PSU), so no
+#   unit is split between training and test.
 def folds(era: str, people: pd.DataFrame):
     """Training and test rows for cross-fitting, as (train, test) row-number arrays.
 
@@ -241,6 +312,20 @@ def folds(era: str, people: pd.DataFrame):
         yield from GroupKFold(n_splits=10).split(people, groups=units)
 
 
+# -- CALCULATION: the mortality score q --------------------------------------
+# Methods, "Mortality score": "The score came from a Cox model of the principal
+#   endpoint containing a female indicator and all marker coordinates, fitted on
+#   both sexes together [47]. Its biomarker coefficients beta define the
+#   mortality-associated direction u = beta/||beta||. The mortality score
+#   q = u'z ... is a profile's signed position along that direction, and the
+#   fitted female coefficient is omitted from it."
+#   "Wherever q was used, its direction was fitted without the scored
+#   participant's outcome."
+# How: for each fold (see folds above): fit Cox(female + all z) on training
+#   rows; u = marker coefficients / their length; q = z . u for the test rows.
+#   This shared version is used by Results 2. Results 5, 6 and 7 fit q in
+#   their own scripts, and Results 4 builds full and reduced q scores in
+#   s4_panel.py (see each script's READ ME block). Results 3 uses no q score.
 def mortality_score(era: str, people: pd.DataFrame, X: np.ndarray, units: list | None = None):
     """q: each participant's coordinates projected on a mortality direction learned without them.
 
@@ -277,6 +362,14 @@ def mortality_score(era: str, people: pd.DataFrame, X: np.ndarray, units: list |
 # ---------------------------------------------------------------------------
 # Participant bootstrap
 # ---------------------------------------------------------------------------
+# -- UNCERTAINTY: the participant bootstrap (Results 1 and 2) ----------------
+# Methods, "Uncertainty": "analysis-specific bootstraps that resampled either
+#   participants within sex and survey cycle, or primary sampling units within
+#   strata [53], refitting the stated learned stages".
+# How: NHANES 1999-2018 resamples participants within survey cycle x sex;
+#   NHANES III within sex x survey phase. Each group keeps its size. Draws:
+#   settings.BOOTSTRAP_DRAWS (500). What is refitted in each draw is set by the
+#   calling script (Supp. Table S0.7).
 def bootstrap_strata(era: str, people: pd.DataFrame) -> list[np.ndarray]:
     """Groups resampled separately, so every draw keeps each group's size.
 
@@ -300,6 +393,9 @@ def bootstrap_rows(era: str, strata: list[np.ndarray], draw: int) -> np.ndarray:
     return np.concatenate([rng.choice(s, size=len(s), replace=True) for s in strata])
 
 
+# -- UNCERTAINTY: the 95% interval -------------------------------------------
+# The 2.5th and 97.5th percentiles of the bootstrap draws: the "95% interval"
+# reported throughout the Results for bootstrap-based estimates.
 def percentile_interval(values) -> tuple[float, float]:
     """The 2.5th and 97.5th percentiles (numpy's linear rule): the 95% bootstrap interval."""
     v = np.asarray(values, float)
@@ -329,6 +425,12 @@ def interval_table(draws: pd.DataFrame, max_missing: float = 0.01) -> pd.DataFra
 # ---------------------------------------------------------------------------
 # Survey-design bootstrap (Results 5)
 # ---------------------------------------------------------------------------
+# -- UNCERTAINTY: the survey-design bootstrap (Results 5) --------------------
+# Methods, "Uncertainty": "... or primary sampling units within strata [53]".
+# How (Rao-Wu): in each stratum with n sampling units, draw n - 1 units with
+# replacement; each participant's weight is n / (n - 1) x the number of times
+# their unit was drawn. Results 5 uses 2,000 draws. (Results 6 has its own
+# version, s6_screen.replicate_weights.)
 def survey_bootstrap_weights(frame: pd.DataFrame, stream: int, draws: int = 2000, seed: int = 20261011):
     """Rao-Wu rescaled bootstrap: replicate weights that respect the survey design.
 
@@ -352,6 +454,12 @@ def survey_bootstrap_weights(frame: pd.DataFrame, stream: int, draws: int = 2000
     return np.concatenate(blocks, axis=1), unit_of
 
 
+# -- CALCULATION: concordance within sex and period --------------------------
+# Methods, "Held-out prediction": "... and by risk-set concordance [51]."
+# How: for each death at age t, compare the person who died with every
+# same-sex, same-period participant still at risk at t; the pair is
+# concordant if the person who died had the higher score (ties count one
+# half). Used for the concordance results of Results 5.
 def concordance_within(entry, exit_, event, sex, strata, score, weights=None) -> float:
     """Concordance comparing participants of the same sex and stratum (survey cycle or phase).
 
@@ -375,6 +483,11 @@ def concordance_within(entry, exit_, event, sex, strata, score, weights=None) ->
     return numerator / denominator
 
 
+# -- CALCULATION: percentiles with weights (Results 6) -----------------------
+# Used for the screen's young-healthy medians, the 99th-percentile caps of the
+# bounded distance and the within-sex 60th-percentile cut-offs, so that the
+# same rule works on the survey-bootstrap weights. At equal weights it equals numpy's ordinary
+# percentile.
 def weighted_quantile(x: np.ndarray, w: np.ndarray, p: float) -> float:
     """Quantile with case weights; equals numpy's linear-interpolation quantile at unit weights.
 
@@ -396,6 +509,9 @@ def weighted_quantile(x: np.ndarray, w: np.ndarray, p: float) -> float:
     return float(low + (h - lo) * (high - low))
 
 
+# -- CALCULATION: five-year risk of death (Results 6) ------------------------
+# Methods, "Screening risks": "Kaplan-Meier estimates [52]."
+# How: 1 - Kaplan-Meier survival at 60 months, optionally weighted.
 def kaplan_meier_risk(months: np.ndarray, died: np.ndarray, weights: np.ndarray | None = None,
                       horizon: float = 60) -> float:
     """Probability of death within `horizon` months (1 - weighted Kaplan-Meier survival).

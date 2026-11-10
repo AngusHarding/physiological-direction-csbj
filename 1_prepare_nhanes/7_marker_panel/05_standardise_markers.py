@@ -1,3 +1,25 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/7_marker_panel/05_standardise_markers.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Turns each transformed marker into a z coordinate measured
+#               from the participant's own sex's young-healthy reference. These
+#               z coordinates feed DM, DE and the mortality score q.
+#
+# METHODS       "Young-healthy reference": "each transformed marker was centred
+#               and scaled by the mean and SD of the same-sex young-healthy
+#               reference". Supp. Section Zero, "z coordinates":
+#               "zij = [Tj(xij) - mujs] / sigmajs where mujs and sigmajs are the
+#               unweighted mean and sample standard deviation (SD) of the
+#               transformed marker in the same-sex reference. The parameters
+#               were the same for every participant of that sex, whatever their
+#               age."
+#
+# PSEUDOCODE
+#   for each marker, for each sex:
+#     mean, SD = transformed values of that sex's reference members
+#     z = (transformed value - mean) / SD   for everyone of that sex
+#   check: within each sex's reference, every marker has mean 0 and SD 1
+# =============================================================================
 """Standardise locked transformed biomarkers to the healthy same-sex reference.
 
 This stage creates coordinates for the HD branch only. It does not calculate

@@ -1,3 +1,10 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/03_import_cbc.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the complete blood count as the analyser reported it.
+#
+# METHODS       Data import for Supp. Section Zero, "Blood cells".
+# =============================================================================
 """Import analyser-reported CBC measurements without screening or derivation."""
 
 from pathlib import Path

@@ -1,3 +1,15 @@
+# =============================================================================
+# READ ME FIRST: runs.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Keeps a record of each run (code fingerprint, data
+#               fingerprints, package versions, fit warnings) and decides
+#               whether stored bootstrap draws may be reused: only if the data,
+#               seed and code are unchanged. Comments and docstrings are not
+#               part of the code fingerprint, so these READ ME blocks do not
+#               invalidate stored draws.
+#
+# METHODS       None. Bookkeeping only; it calculates no estimate.
+# =============================================================================
 """Run records and stored bootstrap draws: knowing which data and code made each output.
 
 This file estimates nothing. It answers two practical questions.

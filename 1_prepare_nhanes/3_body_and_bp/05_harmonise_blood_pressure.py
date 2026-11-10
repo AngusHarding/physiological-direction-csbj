@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/3_body_and_bp/05_harmonise_blood_pressure.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Discards reading 1, sets zero readings to missing, averages
+#               readings 2-4 (at least one usable), and applies the pressure
+#               and pulse bounds (pulse as released, BPXPLS, in beats/min).
+#
+# METHODS       Supp. Section Zero, "Blood pressure and pulse" and "Cleaning".
+# =============================================================================
 """Reconstruct the frozen cardiovascular biomarkers with explicit QC logs."""
 
 from pathlib import Path

@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/01_import_standard_biochemistry.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the standard biochemistry files of the ten cycles,
+#               restoring SAS stored zeros; no correction yet.
+#
+# METHODS       Supp. Section Zero, "Missing-value codes".
+# =============================================================================
 """Import standard-biochemistry source columns without assay correction.
 
 The output is deliberately 'raw-ish': it has restored SAS literal zeros and an

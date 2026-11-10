@@ -1,3 +1,47 @@
+# =============================================================================
+# READ ME FIRST: s4_panel.py  (Results 4)
+# -----------------------------------------------------------------------------
+# RESULTS 4     "Ten routine markers retained prediction and outperformed
+#               Phenotypic Age."
+#
+# WHAT IT DOES  (1) In each training sample, ranks the markers by elastic-net
+#               Cox, refits the top 3-15 as a reduced q score, and tests it on
+#               held-out data against the full q score (eight adequacy
+#               criteria). (2) In the matched NHANES 1999-2010 cohort, compares
+#               the full and ten-marker q scores with Phenotypic Age.
+#
+# METHODS       Supplementary Methods, "Selection and refitting"; "Held-out
+#               prediction"; "Survival models".
+#
+# MAKES         Figure 4 source tables (a-d); Table 3; Supp. Tables S4.2-S4.4,
+#               S4.7; every Results 4 number, except the 32-marker q comparison
+#               ("difference 0.0003"; Supp. Tables S4.5-S4.6), which is not in
+#               this release.
+#
+# NOT IN THIS RELEASE  The inner search that chose each selection's penalty and
+#               L1 fraction (about 177 CPU-hours). This script reads the choices
+#               from inputs/panel_selection_tuning.csv and repeats every step
+#               after them.
+#
+# PSEUDOCODE
+#   (1) for each evaluation (252 five-vs-five cycle divisions; 10 one-cycle
+#       holdouts; 200 NHANES III half-splits; 10 NHANES III folds):
+#     rank markers on TRAINING rows: elastic-net Cox, sex unpenalised, stored
+#       penalty; rank by |coefficient|
+#     full q  = Cox(female + all markers) on training; direction u = beta/|beta|
+#     for size in 3, 5, 7, 10, 12, 15:
+#       reduced q = Cox(female + top markers) on training; its direction
+#       on HELD-OUT rows: correlation with full q, gain over sex alone,
+#         retained gain = reduced gain / full gain, HR in men and in women,
+#         sex contrast
+#     adequacy: the eight criteria (Supp. Table S4.1) over all evaluations
+#   locked ten = the same ranking on all ten cycles (Table 3)
+#   (2) for each of the six matched cycles held out:
+#     q38, q10 (ten chosen without that cycle), local refit on Phenotypic Age
+#       inputs, published Phenotypic Age
+#     evaluation Cox(female + age + score) on training; C on the held-out cycle
+#   intervals for (2): 500 participant draws, the ten markers held fixed
+# =============================================================================
 """Results 4: ten routine markers retained prediction and outperformed Phenotypic Age.
 
 The questions
@@ -119,6 +163,8 @@ NEAR_ZERO_GAIN = 1e-10
 NEAR_ZERO_NORM = 1e-12
 
 
+# A ratio such as "retained gain" is left missing when the full score has no
+# held-out gain to share (see the comment above).
 def _ratio(numerator: float, denominator: float) -> float:
     """numerator / denominator, or missing when the denominator is not above NEAR_ZERO_GAIN.
 
@@ -164,6 +210,9 @@ def cox(frame: pd.DataFrame, terms: list) -> np.ndarray:
     return np.array([fit[t] for t in terms])
 
 
+# -- CALCULATION: held-out log likelihood at training coefficients -----------
+# Methods, "Held-out prediction": "evaluated by the evaluation-set Cox log
+#   partial likelihood at training coefficients".
 def heldout_loglike(frame: pd.DataFrame, terms: list, beta: np.ndarray) -> float:
     """Cox partial log-likelihood of fixed coefficients on new participants."""
     if era_of(frame) == "modern":
@@ -177,6 +226,14 @@ def heldout_loglike(frame: pd.DataFrame, terms: list, beta: np.ndarray) -> float
     return risk.evaluate(frame[terms].to_numpy(float), beta, order=0)
 
 
+# -- CALCULATION: ranking the markers ----------------------------------------
+# Supplementary Methods, "Selection and refitting": "Within each training
+#   sample, an elastic-net attained-age Cox model [59, 60] ranked markers by
+#   absolute penalised coefficient, with sex unpenalised."
+# How: lifelines CoxPHFitter with penalizer 0 for female and the stored
+#   penalty for every marker, the stored L1 fraction, attained age with entry,
+#   cycle strata in NHANES 1999-2018; markers sorted by |coefficient| (ties by
+#   name). Only training rows are passed in.
 def elastic_net_ranking(frame: pd.DataFrame, markers: list, penalty: float, l1_fraction: float) -> list:
     """Markers ranked by the size of their elastic-net Cox coefficient (ties broken by name).
 
@@ -198,6 +255,9 @@ def elastic_net_ranking(frame: pd.DataFrame, markers: list, penalty: float, l1_f
     return [markers[j] for j in sorted(range(len(markers)), key=lambda j: (-abs(beta[j]), markers[j]))]
 
 
+# -- CALCULATION: sex contrast of a score (adequacy criteria 7 and 8) --------
+# Women minus men in the score, adjusted for an age spline and survey period
+# (the same model as models.sex_contrast).
 def _ols_female(people, score):
     """Women minus men in a (training-standardised) score, adjusted for age and survey period: OLS."""
     from patsy import dmatrix
@@ -213,6 +273,10 @@ def _ols_female(people, score):
 _D = {}
 
 
+# -- DESIGN: NHANES III training and evaluation sampling units ---------------
+# Results 4: "100 sampling-unit half-splits in NHANES III, also evaluated in
+#   both directions (200 evaluations)". One unit of each stratum goes to each
+#   half (seed 20261017); the ten grouped folds are the one-fold sensitivity.
 def iii_splits() -> dict:
     """NHANES III training/test sampling units: 100 seeded half-splits (one unit of each
     stratum to each half; both directions) and the ten grouped folds."""
@@ -245,6 +309,18 @@ def _start() -> None:
     _D["iii_splits"] = iii_splits()
 
 
+# -- CALCULATION: one held-out evaluation of every panel size ----------------
+# Results 4: "Within each training sample, we ranked the markers with an
+#   elastic-net Cox model, refitted the top 3, 5, 7, 10, 12 or 15, and tested
+#   them on held-out data." Supplementary Methods: "The top 3, 5, 7, 10, 12 or
+#   15 markers were then refitted by unpenalised Cox regression with sex, and
+#   the training coefficients and score scale were applied unchanged to
+#   evaluation data."
+# How: ranking, the full fit and every reduced fit use training rows only;
+#   the held-out score is standardised with the training mean and SD
+#   (c_tr.mean(), c_tr.std()); the retained gain is (reduced held-out gain over
+#   sex alone) / (full held-out gain over sex alone), Figure 4a,b.
+#   "HD" = z coordinates; "FI" = adverse-excursion coordinates (criteria 3-4).
 def evaluate(job: dict) -> list:
     """Rank on the training sample, then score every panel size in both coordinate systems."""
     era = "iii" if job["analysis"].startswith("iii") else "modern"
@@ -290,6 +366,14 @@ def evaluate(job: dict) -> list:
     return rows
 
 
+# -- CALCULATION: the eight adequacy criteria (Supp. Table S4.1) -------------
+# Results 4: "We counted a panel size as adequate only if it met all eight
+#   prespecified criteria: the reduced q score had to reproduce the full q
+#   score, retain a median of at least 90% of its held-out gain, predict
+#   mortality in both sexes and preserve the full q score's sex contrast".
+#   "Ten was the smallest tested size that met all eight criteria in both eras".
+# How: each criterion is a median or 2.5th percentile across evaluations,
+#   compared with its threshold (listed below, and in the module docstring).
 def adequacy(ev: pd.DataFrame) -> pd.DataFrame:
     """The eight criteria by panel size (HD selection; 'cross' = scored in adverse-excursion coordinates)."""
     out = []
@@ -314,6 +398,13 @@ def adequacy(ev: pd.DataFrame) -> pd.DataFrame:
 # ===========================================================================
 # (2) The matched comparison with Phenotypic Age
 # ===========================================================================
+# -- PHENOTYPIC AGE COMPARISON: set-up ---------------------------------------
+# Results 4: "a matched NHANES 1999-2010 cohort (6,759 participants; 2,112
+#   deaths), predicting each of six survey cycles from the other five".
+# How: published Phenotypic Age from its published formula (PHENOAGE_WEIGHTS,
+#   Levine et al., 2018). For each held-out cycle, the ten markers are ranked on
+#   the other nine cycles of the full 1999-2018 cohort, so the held-out cycle
+#   never contributes to its own ten.
 def benchmark_setup(tuning: pd.DataFrame) -> dict:
     """The matched cohort, its inputs, published Phenotypic Age and each fold's ten markers.
 
@@ -338,6 +429,11 @@ def benchmark_setup(tuning: pd.DataFrame) -> dict:
             "ten": ten, "full": c.people[["cycle", "female"]].reset_index(drop=True), "position": matched_position}
 
 
+# -- UNCERTAINTY: one bootstrap draw of the comparison -----------------------
+# Figure 4 legend: "bars in c and d are 95% intervals from 500
+#   participant-bootstrap draws within cycle and sex. They exclude uncertainty
+#   from marker selection and preprocessing." The full cohort is resampled
+#   within cycle x sex and its matched members kept; the ten markers stay fixed.
 def benchmark_rows(b: dict, draw: int) -> np.ndarray:
     """Matched-cohort rows of one paired bootstrap draw (R064): the full cohort resampled within
     cycle x sex (cycles in order, men first), then only its matched members kept."""
@@ -350,6 +446,20 @@ def benchmark_rows(b: dict, draw: int) -> np.ndarray:
     return rows[rows >= 0]
 
 
+# -- CALCULATION: held-out concordance of each score -------------------------
+# Results 4: "Held-out concordance was 0.694 for the full q score, 0.685 for the
+#   ten-marker q score, 0.662 for the local refit and 0.649 for published
+#   Phenotypic Age. The ten-marker q score exceeded the local refit by 0.024 ...
+#   and published Phenotypic Age by 0.037". "every evaluation model included sex
+#   and age".
+# How, per held-out cycle: q38 and q10 directions from Cox(female + markers) on
+#   training; local refit = Cox(female + Phenotypic Age inputs standardised on
+#   training); evaluation Cox(female + age + score / training SD) on training;
+#   concordance on the held-out cycle (prediction.concordance_counts). Pooled
+#   over the six cycles.
+#   Female HRs (Supp. Table S4.7; Results 4: "the female hazard ratio was 0.92
+#   and 1.02 ... it remained 0.65 and 0.68") are descriptive: one model of
+#   female + age + each participant's held-out score in the whole matched cohort.
 def phenoage_metrics(b: dict, rows: np.ndarray | None = None) -> dict:
     """Held-out concordance of each score and their differences; descriptive female HRs."""
     people, z, inputs, published = b["people"], b["z"], b["inputs"], b["published"]
@@ -448,6 +558,9 @@ FOREST = (("c", "q38", "Full-panel q (38)"), ("c", "q10", "Ten-marker q"), ("c",
           ("d", "q38_minus_q10", "Full-panel q − ten-marker q"))
 
 
+# Figure 4a,b source table: median retained gain and its 2.5th-97.5th
+# percentiles across evaluations (legend: "bars span the 2.5th-97.5th
+# percentiles across evaluations and are not confidence intervals").
 def figure4_reduction(ev: pd.DataFrame) -> pd.DataFrame:
     """Figure 4a,b: median retained gain and its 2.5th-97.5th percentiles across evaluations
     (HD coordinates), by design and panel size; undefined ratios are left out and counted."""
@@ -469,6 +582,10 @@ def figure4_forest(comparison: dict, bounds: dict) -> pd.DataFrame:
                           "upper": bounds.get(f"C_{key}", (np.nan, np.nan))[1]} for panel, key, label in FOREST])
 
 
+# Results 4 selection numbers: smallest adequate size, median retained gain
+# ("0.913 in NHANES 1999-2018 and 0.934 in NHANES III"; one held out: "0.876 and
+# 0.878"), distinct ten-marker sets ("181 distinct sets ... across 200
+# evaluations"), and how often each locked marker was selected (Table 3).
 def selection_numbers(ev: pd.DataFrame, locks: dict) -> tuple[list, pd.DataFrame, dict]:
     """The Results 4 selection summaries from all evaluations and the two locked panels.
 

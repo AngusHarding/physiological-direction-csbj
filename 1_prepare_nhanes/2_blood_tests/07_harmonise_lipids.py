@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/07_harmonise_lipids.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Gives HDL one name across cycles and keeps complete lipid
+#               records.
+#
+# METHODS       Supp. Section Zero, "Renal, body-size and lipid measures".
+# =============================================================================
 """Canonicalise HDL names and complete-case the two lipid source strata."""
 
 from pathlib import Path

@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/4_lifestyle/05_import_physical_activity.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the physical-activity questions, keeping which
+#               questionnaire version each cycle used.
+#
+# METHODS       Data import for Table 1 and Table 4.
+# =============================================================================
 """Import physical-activity source responses while preserving instrument era."""
 
 from pathlib import Path

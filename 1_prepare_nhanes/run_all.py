@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/run_all.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Runs every NHANES 1999-2018 preparation script in folder and
+#               file order, each in its own process.
+#
+# METHODS       None; it calculates nothing itself.
+# =============================================================================
 """Run every preparation script for NHANES 1999-2018, in order.
 
     python -B run_all.py              # all 46 scripts

@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/nhanes3_io.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Readers for the NHANES III fixed-width files (column positions
+#               from the published SAS layouts), the plausibility rule that sets
+#               impossible values to missing, and distribution reports.
+#
+# METHODS       Data handling for Supp. Section Zero; estimates nothing.
+# =============================================================================
 """Layout-driven readers for NHANES III fixed-width files.
 
 SPECIFICATION: see SPECIFICATION.md section 6a, Decision 6.

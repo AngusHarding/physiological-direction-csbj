@@ -1,3 +1,26 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/endpoints.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  States, in one place, the endpoint definitions and which cause
+#               codes each cycle releases. The Results compute the principal
+#               endpoint with the same rule in 3_results/data.py
+#               (principal_endpoint); the release's run does not import this
+#               file, which is kept as the documented definition (see
+#               docs/endpoint.md).
+#
+# METHODS       "Endpoints": "The principal endpoint counted deaths with a
+#               recorded underlying cause other than an identified accident.
+#               Identified accidental deaths and deaths without a recorded cause
+#               were censored at death. Accidents cannot be identified in the
+#               public-use files for 2015-2018, where all deaths with a recorded
+#               cause were counted".
+#
+# DEFINITIONS   event_submitted_v1 (PRINCIPAL) = died AND cause recorded AND
+#                 cause != 4 (accident)
+#               event_allcause (check) = died
+#               event_nonaccidental (check) = the principal rule, 1999-2014
+#                 and NHANES III only
+# =============================================================================
 """The single definition of the mortality endpoint used by every analysis module.
 
 Concern addressed

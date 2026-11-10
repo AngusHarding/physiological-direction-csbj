@@ -1,3 +1,11 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/nhanes3_locations.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Names the input and output folders once, and switches on the
+#               write guard (scripts may write only to this folder's outputs/).
+#
+# METHODS       None; settings only.
+# =============================================================================
 """Where the NHANES III preparation scripts find their inputs and put their outputs.
 
 Every script in 2_prepare_nhanes_iii/ imports this file first. It does the same

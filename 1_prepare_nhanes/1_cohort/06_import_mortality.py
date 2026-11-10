@@ -1,3 +1,23 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/1_cohort/06_import_mortality.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the NCHS public-use linked mortality files (deaths
+#               through 31 December 2019) for the ten cycles and keeps
+#               linkage-eligible records: vital status, underlying cause group,
+#               and months of follow-up from examination.
+#
+# METHODS       "Experimental design": "each linked to National Death Index
+#               records through 31 December 2019". The endpoint itself is
+#               defined in 3_results/data.py (principal_endpoint): death with a
+#               recorded cause other than accident (ucod_leading 4).
+#
+# PSEUDOCODE
+#   read each fixed-width file at the published column positions
+#   keep eligstat == 1 (eligible for linkage)
+#   keep mortstat, ucod_leading, permth_exm (months from examination), ...
+#   Participants with no row here have no linkage; 3_results drops them
+#   (follow-up must be > 0): 12 people aged 52-79 with complete panels.
+# =============================================================================
 """Reconstruct the lossless NHANES 2019 linked-mortality dataframe.
 
 This is a transparent Python translation of the corrected historical

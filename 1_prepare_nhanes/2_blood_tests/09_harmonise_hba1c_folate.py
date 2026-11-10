@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/2_blood_tests/09_harmonise_hba1c_folate.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Screens HbA1c (3-20%), uses it as released, and converts
+#               1999-2006 red cell folate to the microbiological-assay scale with
+#               the four-step NCHS procedure.
+#
+# METHODS       Supp. Section Zero, "Assay calibration" and "Red cell folate" (equations 1-4).
+# =============================================================================
 """Screen HbA1c and place all RBC-folate cycles on the MA assay scale."""
 
 from pathlib import Path

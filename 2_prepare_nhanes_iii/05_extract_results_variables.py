@@ -1,3 +1,13 @@
+# =============================================================================
+# READ ME FIRST: 2_prepare_nhanes_iii/05_extract_results_variables.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Copies the NHANES III questionnaire and examination variables
+#               the Results use (Table 1, Results 5-7), and the NCHS linked
+#               mortality file, into prepared tables. Derives nothing; NHANES
+#               III's 8- and 9-fill codes become missing.
+#
+# METHODS       Data import only. The endpoint is applied in 3_results/data.py.
+# =============================================================================
 """Copy the NHANES III variables the Results use, and the linked mortality file, into three tables.
 
 Steps 1-4 build the marker panel. The Results also need some NHANES III

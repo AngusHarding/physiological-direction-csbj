@@ -1,3 +1,12 @@
+# =============================================================================
+# READ ME FIRST: 1_prepare_nhanes/5_health_conditions/01_import_self_reported_disease.py
+# -----------------------------------------------------------------------------
+# WHAT IT DOES  Reads the doctor-diagnosed condition questions, keeping each
+#               questionnaire separate so that "not asked" stays distinct from
+#               "no".
+#
+# METHODS       Data import for the reference, Table 1 and Table 4.
+# =============================================================================
 """Import chronic-disease questionnaire fields without interpreting responses.
 
 Each questionnaire remains a separate participant table until it is merged by
