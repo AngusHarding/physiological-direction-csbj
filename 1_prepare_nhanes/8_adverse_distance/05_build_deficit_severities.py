@@ -30,7 +30,7 @@
 #               Methods: DA "is constructed like a laboratory frailty index
 #               [27] but is continuous and unbounded."
 # =============================================================================
-"""Convert adverse excursions to bounded FI deficit severities.
+"""Convert adverse excursions to FI deficit severities.
 
 METHODS: see FI_METHODS.md Step 6 (version 2, amended 5 August 2026).
 
